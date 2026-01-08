@@ -1,9 +1,6 @@
 <?php
 require_once 'config.php';
 
-// 세션 시작
-session_start();
-
 // 하드코딩된 비밀번호
 $hard_password = "2fb6adaa698978b90b47b5ba88fb98371e5f9c87849f86458e3b8bd104c16001511ff408da18ed6ce17ae5bcbf424adccf491ffc8578305bec35833325e71c1b";
 
