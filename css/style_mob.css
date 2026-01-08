@@ -1,0 +1,142 @@
+/* ==== mob ==== */
+@media screen and (max-width:767px){
+body,th,td,input,select,textarea,button {font-size:12px; line-height:1.5;}
+.inner {width:100%; padding:0 3%;}
+.pc {display:none !important;}
+.tab {display:none}
+.mob {display:block !important;}
+.pc_img {display:none;}
+.mob_img {display:block;}
+
+body,th,td,input,select,textarea,button {font-size:13px; line-height:20px;}
+
+/* === Main === */
+#wrap {position:relative; width:100%; max-width:1024px; min-width:auto; margin:0 auto; overflow:hidden;}
+
+#header {width: 100%; height: 72px;}
+#header h1 {top: 8px; width: 246px; height: 56px; left: 50%; transform: translateX(-50%);}
+
+#header .h_tel {display: none;}
+
+.lang_box {top: 90px; right: 4%;}
+.lang_box ul li {width: 50px; height: 50px; margin-right: 7px;}
+
+
+#quick_btn {right: 3%; top: auto; transform: none; bottom: 60px;}
+#quick_btn .q_list {width: 55px; display: none;}
+#quick_btn .q_list li {margin-bottom: 8px;}
+#quick_btn button {width: 60px;}
+#quick_btn button img {width: 100%;}
+
+#quick_btn button.q_plus {display: block; margin-bottom: 8px;}
+
+
+
+.inquiry_wrap {position: fixed; width: 100%; height: 325px; left: 0; bottom: 0; z-index: 9991;}
+.inquiry_wrap .top_btn {width: 200px; height: 50px; border-radius: 20px 20px 0 0;}
+.inquiry_wrap .top_btn img {width: 14px; margin-right: 10px;}
+
+.inquiry_wrap .i_content {width: 100%; height: 275px; padding: 40px 0;}
+.inquiry_wrap .i_content .i_inner {width: 100%; margin: 0 auto; padding: 0 3%; flex-wrap: wrap;}
+.inquiry_wrap .i_content .i_box {width: 100%;}
+.inquiry_wrap .i_content .i_box ul {display: flex; flex-wrap: wrap;}
+.inquiry_wrap .i_content .i_box ul li {margin-right: 0; margin-bottom: 10px; width: 100%;}
+
+.inquiry_wrap .i_content .i_box ul li input[type="text"] {width: 100%; height: 40px; border-radius: 20px; padding-left: 20px; font-size: 14px;}
+
+.inquiry_wrap .i_content .in_btn {width: 100%; height: 45px; font-size: 18px; border-radius: 12px; margin-top: 15px;}
+.inquiry_wrap .i_content .privacy {display: flex; margin-top: 0;}
+.inquiry_wrap .i_content .privacy p {font-size: 14px; padding-left: 8px;}
+
+
+
+
+
+
+
+
+
+
+
+
+#con2 {margin-bottom: 120px;}
+#con2 .title {margin-bottom: 50px;}
+#con2 .c2_list li .tit_box {height: 70px; line-height: 70px; font-size: 20px; font-weight: bold;}
+#con2 .c2_list .slick-dots {display: none !important;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+footer {padding: 25px 0 70px;}
+footer .inner .foot_logo {position: static; width: 180px;}
+
+footer .f_wrap {margin-top: 30px; padding-left: 0; display: block; align-items: flex-start; justify-content: space-between;}
+footer .f_wrap .f_box .f_info {display: flex; align-items: center; margin-bottom: 20px;}
+footer .f_wrap .f_box .f_info li {font-size: 12px; margin-right: 20px;}
+footer .f_wrap .f_box .f_info li:last-child {margin-right: 0;}
+
+footer .f_wrap button {font-size: 12px;}
+
+footer p.copyright {padding-left: 0; font-size: 12px; margin-top: 20px;}
+
+
+
+
+
+
+/* === Sub === */
+#sub_visual {width: 100%; height: 280px; padding: 115px 0;}
+#sub_visual .title p {font-size: 18px; margin-bottom: 25px;}
+#sub_visual .title h2 {font-size: 40px;}
+
+
+/* 로그인 */
+#login_wrap {margin: 70px 0 100px;}
+#login_wrap .l_tit { margin-bottom: 40px;}
+#login_wrap .l_tit h3 {font-size: 28px; }
+#login_wrap .l_tit h3 b {font-weight: bold;}
+#login_wrap .l_tit p {font-size: 16px;}
+
+#login_wrap .login_box {width: 100%; border-radius: 10px; padding: 40px 20px 50px;}
+#login_wrap .login_box input {height: 45px; padding-left: 15px; font-size: 14px;}
+#login_wrap .login_box .login_btn {height: 45px; font-size: 15px; font-weight: bold;}
+
+#login_wrap .login_box .findpw {font-size: 15px;}
+#login_wrap .login_box .j_btn {font-size: 15px;}
+
+
+#login_wrap .join_box {width: 100%; border-radius: 10px; margin: 0 auto; padding: 40px 20px;}
+#login_wrap .join_box .join li {margin-bottom: 25px;}
+#login_wrap .join_box .join li p {font-size: 15px;}
+#login_wrap .join_box .join li > input {height: 45px; padding-left: 15px; font-size: 15px;}
+
+#login_wrap .join_box .join_btn {width: 250px; height: 45px; margin-top: 30px; font-size: 15px; font-weight: bold;}
+
+#login_wrap .join_box .mypage li {border-bottom: 1px solid #ddd; padding-bottom: 20px;}
+
+#login_wrap .join_box .mypage li strong.my_data {font-size: 16px;}
+#login_wrap .join_box .edit_btn {width: 250px; height: 45px; margin-top: 60px; font-size: 15px; font-weight: bold;}
+
+.admin_member_list {width: 100%; overflow-x: scroll;}
+.admin_member_list .admin_tbl {min-width: 800px;}
+.admin_member_list .admin_tbl th {background: #eaeff6; font-size: 14px; padding: 12px 0;}
+.admin_member_list .admin_tbl td {text-align: center; font-size: 14px; padding: 12px 0; border-bottom: 1px solid #ddd;}
+.admin_member_list .admin_tbl td .admin_wd {font-size: 13px;}
+
+
+
+
+
+
+}

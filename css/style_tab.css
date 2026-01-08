@@ -1,0 +1,43 @@
+/* ==== tab ==== */
+@media screen and (max-width:1024px){
+.inner {width:100%; padding:0 3%;}
+.pc {display:block;}
+.tab {display:block;}
+.mob {display:none;}
+.pc_img {display:none !important;}
+.mob_img {display:block !important;}
+
+body,th,td,input,select,textarea,button {font-size:16px; line-height:28px;}
+
+/* === Main === */
+#wrap {position:relative; width:100%; min-width:auto; margin:0 auto; overflow:hidden;}
+
+#header h1 {position:absolute; left:3%; top:38px;}
+#header h1 a {display:block; width:100%; height:100%;}
+
+#header .gnb {display:none;}
+
+.navi {position: fixed; top:0; left:0; width: 100%; height:100%; background:rgba(0,0,0,.5); z-index:9999; display:none;}
+.navi .navi_wrap {float: right; width: 45%; height:100%; background:#fff; display:block; position:relative; padding: 150px 3% 0;}
+.navi .lnb h3 {font-size: 22px; line-height: 1; padding-bottom: 15px; width: 100%; border-bottom:1px solid #ddd; font-weight: 600; margin-top: 40px; text-align: left; padding-left: 10px;}
+.navi .lnb h3:first-child {margin-top: 0;}
+.navi .lnb h3 a {color: #111; display:block; width:100%; height:100%;}
+.navi .lnb .sub_navi {margin-top: 15px;}
+.navi .lnb .sub_navi li {margin-bottom: 3px;}
+.navi .lnb .sub_navi li a {color: #777;}
+
+
+.navi_btn {display:block; position:absolute; top:36px; right:3%; width:30px; height:23px; cursor:pointer; transition:0.3s ease-in-out; z-index:9999;}
+.navi_btn span {position:absolute; left:0; display:block; width:30px; height:3px; background:#fff;  transition:0.3s ease-in-out 0.2s;}
+.navi_btn span.line01 {top:0;}
+.navi_btn span.line02 {top:10px;}
+.navi_btn span.line03 {top:20px;}
+.navi_btn.on {transform:rotate(-45deg); transition:0.3s ease-in-out 0.2s;}
+.navi_btn.on span {top:50%; margin-top:-2px; transition:0.3s ease-in-out;} 
+
+
+#header > .login_box {display: none;}
+
+
+
+}
