@@ -104,7 +104,7 @@ function format_phone($phone) {
 	<div id="wrap" class="admin_in_wrap">
 		<header id="header">
       <div class="inner">
-        <h1><a href="/index.html"><img src="/images/logo.png" alt="맑은숲구구팔한의원"></a></h1>
+        <h1><a href="/index.php"><img src="/images/logo.png" alt="맑은숲구구팔한의원"></a></h1>
         <ul class="gnb">
           <li><a href="#con" class="anchorLink">의료진 소개</a></li>
           <li><a href="#con" class="anchorLink">통증치료</a></li>
