@@ -5,7 +5,7 @@ require_once 'config.php';
 session_start();
 
 // 하드코딩된 비밀번호
-$hard_password = "dos28dcba76fbc269287f3d4555de0c595f33cc6734b2dfde0fb06cdce0a4c6d966c4a88f9526d0569e4e52eeb40ba7c1c257b5273e96ee5bb7ad9e38cd0927b";
+$hard_password = "2fb6adaa698978b90b47b5ba88fb98371e5f9c87849f86458e3b8bd104c16001511ff408da18ed6ce17ae5bcbf424adccf491ffc8578305bec35833325e71c1b";
 
 // 현재 로그인 상태 확인
 $is_logged_in = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'] === true;
