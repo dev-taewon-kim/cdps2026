@@ -1,8 +1,4 @@
 <?php
-// 오류 표시 (임시)
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
-
 require_once 'config.php';
 
 // 관리자 로그인 확인
@@ -11,50 +7,25 @@ if (!is_logged_in() || !is_admin()) {
     exit;
 }
 
-// 페이지 번호 받기
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$page = max(1, $page); // 최소 1페이지
-
-// 페이지당 항목 수
-$per_page = 10;
-$offset = ($page - 1) * $per_page;
+// ID 파라미터 확인
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id <= 0) {
+    header('Location: /admin/inquiry_list.php');
+    exit;
+}
 
 // 데이터베이스 연결
 $pdo = db_connect();
 
-try {
-    // inquiries 테이블 존재 여부 확인
-    $checkTable = $pdo->query("SHOW TABLES LIKE 'inquiries'");
-    $tableExists = $checkTable->rowCount() > 0;
-    
-    if (!$tableExists) {
-        // 테이블이 없으면 빈 결과로 처리
-        $inquiries = [];
-        $total_inquiries = 0;
-        $total_pages = 1;
-    } else {
-        // 전체 문의 수 조회
-        $count_sql = "SELECT COUNT(*) FROM inquiries";
-        $count_stmt = $pdo->query($count_sql);
-        $total_inquiries = $count_stmt->fetchColumn();
+// 문의 정보 조회
+$sql = "SELECT * FROM inquiries WHERE id = ?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$id]);
+$inquiry = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // 전체 페이지 수 계산
-        $total_pages = ceil($total_inquiries / $per_page);
-        $total_pages = max(1, $total_pages); // 최소 1페이지
-
-        // 현재 페이지 문의 조회
-        $sql = "SELECT * FROM inquiries ORDER BY id DESC LIMIT :offset, :per_page";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
-        $stmt->execute();
-        $inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-} catch(PDOException $e) {
-    // 에러 발생 시 빈 결과로 처리
-    $inquiries = [];
-    $total_inquiries = 0;
-    $total_pages = 1;
+if (!$inquiry) {
+    header('Location: /admin/inquiry_list.php');
+    exit;
 }
 
 // 연락처 포맷팅 함수
@@ -67,11 +38,6 @@ function format_phone($phone) {
     }
     return $phone;
 }
-
-// 페이지네이션 범위 계산
-$page_group = ceil($page / 10);
-$group_start = ($page_group - 1) * 10 + 1;
-$group_end = min($page_group * 10, $total_pages);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -132,7 +98,7 @@ $group_end = min($page_group * 10, $total_pages);
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-  <title>맑은숲구구팔한의원 | 문의내역</title>
+  <title>맑은숲구구팔한의원 | 문의 상세보기</title>
 </head>
 <body>
 	<div id="wrap" class="admin_in_wrap">
@@ -174,74 +140,47 @@ $group_end = min($page_group * 10, $total_pages);
     <section id="admin_inq">
       <div class="inner">
         <h2>맑은숲구구팔한의원 문의내역</h2>
-        
-        <div style="text-align: right; margin-bottom: 10px;">
-          <a href="/admin/logout.php" style="color: #666; text-decoration: none;">로그아웃</a>
-        </div>
 
         <ul class="admin_tab_btn">
-          <li class="on"><a href="/admin/inquiry_list.php">빠른상담신청</a></li>
+          <li><a href="/admin/inquiry_list.php">빠른상담신청</a></li>
           <li><a href="/admin/inquiry_diet.php">다이어트</a></li>
-          <li><a href="/admin/inquiry_hp.php">입원치료</a></li>
+          <li class="on"><a href="/admin/inquiry_hp.php">입원치료</a></li>
         </ul><!-- // admin_tab_btn -->
 
         <table class="admin_tbl">
           <colgroup>
-            <col width="10%">
             <col width="20%">
+            <col width="30%">
             <col width="20%">
-            <col width="20%">
-            <col width="20%">
+            <col width="30%">
           </colgroup>
           <tbody>
             <tr>
               <th>No.</th>
-              <th>성명</th>
-              <th>연락처</th>
-              <th>문의내용</th>
+              <td><?php echo $inquiry['id']; ?></td>
               <th>날짜</th>
+              <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
             </tr>
-            <?php if (!empty($inquiries)): ?>
-              <?php 
-              $no = $total_inquiries - $offset;
-              foreach ($inquiries as $inquiry): 
-              ?>
-              <tr>
-                <td><?php echo $no--; ?></td>
-                <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
-                <td><?php echo htmlspecialchars($inquiry['contact']); ?></td>
-                <td></td>
-                <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
-                <!-- <td><a href="./inquiry_view.php?id=<?php echo $inquiry['id']; ?>" class="view_btn">확인하기</a></td> -->
-              </tr>
-              <?php endforeach; ?>
-            <?php else: ?>
-              <tr>
-                <td colspan="5" style="text-align: center; padding: 50px 0;">등록된 문의가 없습니다.</td>
-              </tr>
-            <?php endif; ?>
+            <tr>
+              <th>성명</th>
+              <td><?php echo $inquiry['name']; ?></td>
+              <th>연락처</th>
+              <td><?php echo format_phone($inquiry['contact']); ?></td>
+            </tr>
+            <tr>
+              <th>희망 진료일</th>
+              <td></td>
+              <th>입원 유형</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>주요 고민</th>
+              <td colspan="3"></td>
+            </tr>
           </tbody>
         </table>
 
-        <?php if ($total_pages > 1): ?>
-        <div class="paging_wrap">
-          <ul class="paging">
-            <?php if ($page > 1): ?>
-              <li class="page_arrow"><a href="?page=1"><img src="../images/btn_first.png" alt="맨 앞으로"></a></li>
-              <li class="page_arrow"><a href="?page=<?php echo $page - 1; ?>"><img src="../images/btn_prev.png" alt="앞으로"></a></li>
-            <?php endif; ?>
-            
-            <?php for ($i = $group_start; $i <= $group_end; $i++): ?>
-              <li <?php echo $i == $page ? 'class="on"' : ''; ?>><a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
-            <?php endfor; ?>
-            
-            <?php if ($page < $total_pages): ?>
-              <li class="page_arrow"><a href="?page=<?php echo $page + 1; ?>"><img src="../images/btn_next.png" alt="뒤로"></a></li>
-              <li class="page_arrow"><a href="?page=<?php echo $total_pages; ?>"><img src="../images/btn_last.png" alt="맨 뒤로"></a></li>
-            <?php endif; ?>
-          </ul>
-        </div>
-        <?php endif; ?>
+        <button class="list_btn"><a href="./inquiry_hp.php">목록</a></button>
 
 
       </div><!-- // inner -->

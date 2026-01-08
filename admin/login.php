@@ -115,21 +115,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 	<div id="wrap">
 		<header id="header">
-      <h1><a href="/index.html"><img src="/images/logo.png" alt="맑은숲구구팔한의원"></a></h1>
-      <ul class="gnb">
-        <li><a href="#con1" class="anchorLink">병원소개</a></li>
-        <li><a href="#con2" class="anchorLink">진료과목</a></li>
-        <li><a href="#con4" class="anchorLink">임플란트</a></li>
-        <li><a href="#con11" class="anchorLink">자연치아 살리기</a></li>
-        <li><a href="#con12" class="anchorLink">사랑니 발치</a></li>
-        <li><a href="#con13" class="anchorLink">둘러보기</a></li>
-        <li><a href="#con14" class="anchorLink">오시는 길</a></li>
-      </ul><!-- // gnb -->
+      <div class="inner">
+        <h1><a href="/index.html"><img src="/images/logo.png" alt="맑은숲구구팔한의원"></a></h1>
+        <ul class="gnb">
+          <li><a href="#con" class="anchorLink">의료진 소개</a></li>
+          <li><a href="#con" class="anchorLink">통증치료</a></li>
+          <li><a href="#con" class="anchorLink">체형교정</a></li>
+          <li><a href="#con" class="anchorLink">다이어트</a></li>
+          <li><a href="#con" class="anchorLink">입원치료</a></li>
+          <li><a href="#con" class="anchorLink">오시는길</a></li>
+        </ul><!-- // gnb -->
 
-      <div class="h_tel"><a href="tel:02-832-2275">
-        <img src="/images/h_tel.png" alt="">
-        <p>02.832.2275</p>
-      </a></div>
+        <div class="navi clfix">
+          <div class="navi_wrap">
+            <div class="lnb">
+              <h3><a href="#con" class="anchorLink">의료진 소개</a></h3>
+              <h3><a href="#con" class="anchorLink">통증치료</a></h3>
+              <h3><a href="#con" class="anchorLink">체형교정</a></h3>
+              <h3><a href="#con" class="anchorLink">다이어트</a></h3>
+              <h3><a href="#con" class="anchorLink">입원치료</a></h3>
+              <h3><a href="#con" class="anchorLink">오시는길</a></h3>
+            </div><!-- // lnb -->
+          </div><!-- // navi_wrap -->
+        </div><!-- // navi -->
+      </div><!-- // inner -->
+      
+      <div class="navi_btn">
+        <span class="line01"></span>
+        <span class="line02"></span>
+        <span class="line03"></span>
+      </div>
+
 		</header><!-- // header -->
 
 
@@ -160,18 +176,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="f_wrap">
           <div class="f_box">
             <ul class="f_info">
-              <li>상호명 : 맑은숲구구팔한의원</li>
-              <li>대표자 : 김준현</li>
+              <li>대표자명 : 윤성식</li>
+              <li>주소 : 부산광역시 수영구 수영로 697, 3,4층(수영동, 홍인빌딩)</li>
             </ul>
             <ul class="f_info">
-              <li>사업자등록번호 : 671-98-01735</li>
-              <li>대표번호 : 02-832-2275</li>
+              <li>사업자등록번호 : 580-93-01642</li>
+              <li>Copylightⓒ2025 맑은숲구구팔한의원 All Rights Reserved.</li>
             </ul>
           </div><!-- // f_box -->
           <button>비급여 항목안내</button>
         </div><!-- // f_wrap -->
-        
-        <p class="copyright">COPYRIGHT ⓒ 2025 맑은숲구구팔한의원 ALL RIGHTS RESERVED.</p>
+
       </div><!-- // inner -->
     </footer><!-- // footer -->
 

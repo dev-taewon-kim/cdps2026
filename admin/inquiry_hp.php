@@ -180,26 +180,28 @@ $group_end = min($page_group * 10, $total_pages);
         </div>
 
         <ul class="admin_tab_btn">
-          <li class="on"><a href="/admin/inquiry_list.php">빠른상담신청</a></li>
+          <li><a href="/admin/inquiry_list.php">빠른상담신청</a></li>
           <li><a href="/admin/inquiry_diet.php">다이어트</a></li>
-          <li><a href="/admin/inquiry_hp.php">입원치료</a></li>
+          <li class="on"><a href="/admin/inquiry_hp.php">입원치료</a></li>
         </ul><!-- // admin_tab_btn -->
 
         <table class="admin_tbl">
           <colgroup>
+            <col width="7%">
             <col width="10%">
+            <col width="*">
             <col width="20%">
-            <col width="20%">
-            <col width="20%">
-            <col width="20%">
+            <col width="15%">
+            <col width="15%">
           </colgroup>
           <tbody>
             <tr>
               <th>No.</th>
               <th>성명</th>
               <th>연락처</th>
-              <th>문의내용</th>
+              <th>문의유형</th>
               <th>날짜</th>
+              <th>자세히보기</th>
             </tr>
             <?php if (!empty($inquiries)): ?>
               <?php 
@@ -212,7 +214,7 @@ $group_end = min($page_group * 10, $total_pages);
                 <td><?php echo htmlspecialchars($inquiry['contact']); ?></td>
                 <td></td>
                 <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
-                <!-- <td><a href="./inquiry_view.php?id=<?php echo $inquiry['id']; ?>" class="view_btn">확인하기</a></td> -->
+                <td><a href="./inquiry_hp_view.php?id=<?php echo $inquiry['id']; ?>" class="view_btn">확인하기</a></td>
               </tr>
               <?php endforeach; ?>
             <?php else: ?>
