@@ -58,6 +58,39 @@ if ($is_logged_in && isset($_GET['action'])) {
         }
     }
 
+    // 개별 테이블 초기화
+    else if ($action === 'truncate_fast') {
+        try {
+            $pdo->exec("TRUNCATE TABLE inquiries");
+            $success_message = "빠른 상담 테이블이 초기화되었습니다.";
+        } catch(PDOException $e) { $error_message = "오류: " . $e->getMessage(); }
+    }
+    else if ($action === 'truncate_diet') {
+        try {
+            $pdo->exec("TRUNCATE TABLE diet_inquiries");
+            $success_message = "다이어트 상담 테이블이 초기화되었습니다.";
+        } catch(PDOException $e) { $error_message = "오류: " . $e->getMessage(); }
+    }
+    else if ($action === 'truncate_hp') {
+        try {
+            $pdo->exec("TRUNCATE TABLE hp_inquiries");
+            $success_message = "입원치료 상담 테이블이 초기화되었습니다.";
+        } catch(PDOException $e) { $error_message = "오류: " . $e->getMessage(); }
+    }
+
+    // 모든 테이블 완전 삭제
+    else if ($action === 'drop_all') {
+        try {
+            $pdo->exec("DROP TABLE IF EXISTS diet_inquiries");
+            $pdo->exec("DROP TABLE IF EXISTS hp_inquiries");
+            $pdo->exec("DROP TABLE IF EXISTS inquiries");
+            $pdo->exec("DROP TABLE IF EXISTS users");
+            $success_message = "모든 테이블이 완전히 삭제되었습니다.";
+        } catch(PDOException $e) {
+            $error_message = "테이블 삭제 중 오류가 발생했습니다: " . $e->getMessage();
+        }
+    }
+
     // 초기 데이터 생성
     else if ($action === 'init') {
         // 사용자 테이블 존재 여부 확인
@@ -75,7 +108,7 @@ if ($is_logged_in && isset($_GET['action'])) {
                 contact VARCHAR(20) NULL,
                 created_at DATETIME NOT NULL,
                 last_login_at DATETIME NULL
-            )";
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
 
             try {
                 $pdo->exec($sql);
@@ -97,7 +130,7 @@ if ($is_logged_in && isset($_GET['action'])) {
                 contact VARCHAR(20) NOT NULL,
                 business_category VARCHAR(50) NULL,
                 created_at DATETIME NOT NULL
-            )";
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
 
             try {
                 $pdo->exec($sql);
@@ -118,7 +151,7 @@ if ($is_logged_in && isset($_GET['action'])) {
                 diet_type VARCHAR(50) NOT NULL,
                 content TEXT NULL,
                 created_at DATETIME NOT NULL
-            )";
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
             try {
                 $pdo->exec($sql);
                 $success_message .= "<br>diet_inquiries 테이블이 생성되었습니다.";
@@ -138,7 +171,7 @@ if ($is_logged_in && isset($_GET['action'])) {
                 hp_type VARCHAR(50) NOT NULL,
                 content TEXT NULL,
                 created_at DATETIME NOT NULL
-            )";
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
             try {
                 $pdo->exec($sql);
                 $success_message .= "<br>hp_inquiries 테이블이 생성되었습니다.";
@@ -213,17 +246,73 @@ if ($is_logged_in) {
 
 // 상담 데이터 조회 (로그인 상태에서만)
 $inquiries = [];
+$diet_inquiries = [];
+$hp_inquiries = [];
+
+// 페이지네이션 설정
+$per_page = 10;
+
 if ($is_logged_in) {
     try {
-        $checkInquiryTable = $pdo->query("SHOW TABLES LIKE 'inquiries'");
-        $inquiryTableExists = $checkInquiryTable->rowCount() > 0;
-
-        if ($inquiryTableExists) {
-            $stmt = $pdo->query("SELECT * FROM inquiries ORDER BY id DESC");
+        // 1. 빠른 상담신청
+        $page_fast = isset($_GET['page_fast']) ? max(1, (int)$_GET['page_fast']) : 1;
+        $offset_fast = ($page_fast - 1) * $per_page;
+        $checkFastTable = $pdo->query("SHOW TABLES LIKE 'inquiries'");
+        if ($checkFastTable->rowCount() > 0) {
+            $total_fast = $pdo->query("SELECT COUNT(*) FROM inquiries")->fetchColumn();
+            $total_pages_fast = max(1, ceil($total_fast / $per_page));
+            
+            $stmt = $pdo->prepare("SELECT * FROM inquiries ORDER BY id DESC LIMIT :offset, :per_page");
+            $stmt->bindValue(':offset', $offset_fast, PDO::PARAM_INT);
+            $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
+            $stmt->execute();
             $inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $page_group_fast = ceil($page_fast / 10);
+            $group_start_fast = ($page_group_fast - 1) * 10 + 1;
+            $group_end_fast = min($page_group_fast * 10, $total_pages_fast);
         }
+
+        // 2. 다이어트 상담
+        $page_diet = isset($_GET['page_diet']) ? max(1, (int)$_GET['page_diet']) : 1;
+        $offset_diet = ($page_diet - 1) * $per_page;
+        $checkDietTable = $pdo->query("SHOW TABLES LIKE 'diet_inquiries'");
+        if ($checkDietTable->rowCount() > 0) {
+            $total_diet = $pdo->query("SELECT COUNT(*) FROM diet_inquiries")->fetchColumn();
+            $total_pages_diet = max(1, ceil($total_diet / $per_page));
+
+            $stmt = $pdo->prepare("SELECT * FROM diet_inquiries ORDER BY id DESC LIMIT :offset, :per_page");
+            $stmt->bindValue(':offset', $offset_diet, PDO::PARAM_INT);
+            $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
+            $stmt->execute();
+            $diet_inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $page_group_diet = ceil($page_diet / 10);
+            $group_start_diet = ($page_group_diet - 1) * 10 + 1;
+            $group_end_diet = min($page_group_diet * 10, $total_pages_diet);
+        }
+
+        // 3. 입원치료 상담
+        $page_hp = isset($_GET['page_hp']) ? max(1, (int)$_GET['page_hp']) : 1;
+        $offset_hp = ($page_hp - 1) * $per_page;
+        $checkHpTable = $pdo->query("SHOW TABLES LIKE 'hp_inquiries'");
+        if ($checkHpTable->rowCount() > 0) {
+            $total_hp = $pdo->query("SELECT COUNT(*) FROM hp_inquiries")->fetchColumn();
+            $total_pages_hp = max(1, ceil($total_hp / $per_page));
+
+            $stmt = $pdo->prepare("SELECT * FROM hp_inquiries ORDER BY id DESC LIMIT :offset, :per_page");
+            $stmt->bindValue(':offset', $offset_hp, PDO::PARAM_INT);
+            $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
+            $stmt->execute();
+            $hp_inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $page_group_hp = ceil($page_hp / 10);
+            $group_start_hp = ($page_group_hp - 1) * 10 + 1;
+            $group_end_hp = min($page_group_hp * 10, $total_pages_hp);
+        }
+
     } catch(PDOException $e) {
-        $error_message = "상담 데이터 조회 중 오류가 발생했습니다: " . $e->getMessage();
+        $error_message = "데이터 조회 중 오류가 발생했습니다: " . $e->getMessage();
     }
 }
 
@@ -385,6 +474,45 @@ function format_phone($phone) {
             word-wrap: break-word;
             white-space: pre-wrap;
         }
+        /* Pagination Styles */
+        .paging_wrap {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .paging {
+            display: inline-flex;
+            list-style: none;
+            padding: 0;
+            gap: 5px;
+        }
+        .paging li {
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+        .paging li a {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        .paging li.on {
+            background-color: #2196F3;
+            border-color: #2196F3;
+        }
+        .paging li.on a {
+            color: #fff;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .truncate-btn {
+            background-color: #ff9800;
+            font-size: 12px;
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
@@ -415,9 +543,10 @@ function format_phone($phone) {
             <!-- 메뉴 버튼 -->
             <div class="menu">
                 <button onclick="window.location.href='<?php echo $_SERVER['PHP_SELF']; ?>'">현재 테이블 조회</button>
-                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate', '정말로 사용자 테이블을 초기화하시겠습니까?')">사용자 테이블 초기화</button>
-                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_inquiry', '정말로 상담 테이블을 초기화하시겠습니까?')">상담 테이블 초기화</button>
-                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=init', '초기 데이터를 생성하시겠습니까?')">초기 데이터 생성</button>
+                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=init', '모든 필수 테이블을 생성하고 초기화하시겠습니까?')">전체 테이블 초기 생성</button>
+                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_inquiry', '정말로 모든 상담 테이블의 데이터를 삭제하시겠습니까?')">전체 상담 데이터 비우기</button>
+                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate', '정말로 사용자 테이블을 초기화하시겠습니까?')">사용자 데이터 비우기</button>
+                <button style="background-color: #f44336;" onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=drop_all', '정말로 모든 테이블을 삭제하시겠습니까? 데이터가 모두 소실됩니다.')">모든 테이블 완전 삭제 (Drop)</button>
                 <button onclick="openResetModal()">관리자 비밀번호 재설정</button>
                 <button class="logout" onclick="window.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?action=logout'">Logout</button>
             </div>
@@ -441,13 +570,13 @@ function format_phone($phone) {
                         <tbody>
                             <?php foreach ($users as $user): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($user['id']); ?></td>
-                                <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                <td><?php echo htmlspecialchars($user['name']); ?></td>
-                                <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                <td><?php echo htmlspecialchars($user['contact']); ?></td>
-                                <td><?php echo htmlspecialchars($user['created_at']); ?></td>
-                                <td><?php echo htmlspecialchars($user['last_login_at'] ?: '-'); ?></td>
+                                <td><?php echo $user['id']; ?></td>
+                                <td><?php echo $user['username']; ?></td>
+                                <td><?php echo $user['name']; ?></td>
+                                <td><?php echo $user['email']; ?></td>
+                                <td><?php echo $user['contact']; ?></td>
+                                <td><?php echo $user['created_at']; ?></td>
+                                <td><?php echo $user['last_login_at'] ?: '-'; ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -457,32 +586,170 @@ function format_phone($phone) {
                 <?php endif; ?>
             </div>
 
-            <!-- 상담 테이블 표시 -->
+            <!-- 빠른 상담 테이블 표시 -->
             <div class="section">
+                <div class="section-header">
+                    <h2>빠른 상담 신청 내역</h2>
+                    <button class="truncate-btn" onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_fast', '정말로 빠른 상담 데이터를 모두 삭제하시겠습니까?')">테이블 비우기</button>
+                </div>
                 <?php if (!empty($inquiries)): ?>
-                    <h2>상담 신청 내역</h2>
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No.</th>
                                 <th>이름</th>
                                 <th>연락처</th>
+                                <th>항목</th>
                                 <th>신청일시</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($inquiries as $inquiry): ?>
+                            <?php 
+                            $no = $total_fast - $offset_fast;
+                            foreach ($inquiries as $inquiry): 
+                            ?>
                             <tr>
-                                <td><?php echo $inquiry['id']; ?></td>
-                                <td><?php echo $inquiry['name']; ?></td>
+                                <td><?php echo $no--; ?></td>
+                                <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
                                 <td><?php echo format_phone($inquiry['contact']); ?></td>
+                                <td><?php echo htmlspecialchars($inquiry['business_category']); ?></td>
                                 <td><?php echo $inquiry['created_at']; ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                    <div class="paging_wrap">
+                      <ul class="paging">
+                        <?php if ($page_fast > 1): ?>
+                          <li><a href="?page_fast=1&page_diet=<?php echo $page_diet; ?>&page_hp=<?php echo $page_hp; ?>">&laquo;</a></li>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = $group_start_fast; $i <= $group_end_fast; $i++): ?>
+                          <li <?php echo $i == $page_fast ? 'class="on"' : ''; ?>><a href="?page_fast=<?php echo $i; ?>&page_diet=<?php echo $page_diet; ?>&page_hp=<?php echo $page_hp; ?>"><?php echo $i; ?></a></li>
+                        <?php endfor; ?>
+                        
+                        <?php if ($page_fast < $total_pages_fast): ?>
+                          <li><a href="?page_fast=<?php echo $page_fast + 1; ?>&page_diet=<?php echo $page_diet; ?>&page_hp=<?php echo $page_hp; ?>">&raquo;</a></li>
+                        <?php endif; ?>
+                      </ul>
+                    </div>
                 <?php else: ?>
-                    <p>표시할 상담 데이터가 없습니다.</p>
+                    <p>표시할 빠른 상담 데이터가 없습니다.</p>
+                <?php endif; ?>
+            </div>
+
+            <!-- 다이어트 상담 테이블 표시 -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>다이어트 상담 신청 내역</h2>
+                    <button class="truncate-btn" onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_diet', '정말로 다이어트 상담 데이터를 모두 삭제하시겠습니까?')">테이블 비우기</button>
+                </div>
+                <?php if (!empty($diet_inquiries)): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>이름</th>
+                                <th>연락처</th>
+                                <th>예약일</th>
+                                <th>비만유형</th>
+                                <th style="width: 300px;">문의내용</th>
+                                <th>신청일시</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $no = $total_diet - $offset_diet;
+                            foreach ($diet_inquiries as $diet): 
+                            ?>
+                            <tr>
+                                <td><?php echo $no--; ?></td>
+                                <td><?php echo $diet['name']; ?></td>
+                                <td><?php echo format_phone($diet['contact']); ?></td>
+                                <td><?php echo $diet['reservation_date']; ?></td>
+                                <td><?php echo $diet['diet_type']; ?></td>
+                                <td class="inquiry-content"><?php echo $diet['content']; ?></td>
+                                <td><?php echo $diet['created_at']; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <div class="paging_wrap">
+                      <ul class="paging">
+                        <?php if ($page_diet > 1): ?>
+                          <li><a href="?page_fast=<?php echo $page_fast; ?>&page_diet=1&page_hp=<?php echo $page_hp; ?>">&laquo;</a></li>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = $group_start_diet; $i <= $group_end_diet; $i++): ?>
+                          <li <?php echo $i == $page_diet ? 'class="on"' : ''; ?>><a href="?page_fast=<?php echo $page_fast; ?>&page_diet=<?php echo $i; ?>&page_hp=<?php echo $page_hp; ?>"><?php echo $i; ?></a></li>
+                        <?php endfor; ?>
+                        
+                        <?php if ($page_diet < $total_pages_diet): ?>
+                          <li><a href="?page_fast=<?php echo $page_fast; ?>&page_diet=<?php echo $page_diet + 1; ?>&page_hp=<?php echo $page_hp; ?>">&raquo;</a></li>
+                        <?php endif; ?>
+                      </ul>
+                    </div>
+                <?php else: ?>
+                    <p>표시할 다이어트 상담 데이터가 없습니다.</p>
+                <?php endif; ?>
+            </div>
+
+            <!-- 입원 상담 테이블 표시 -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>입원치료 상담 신청 내역</h2>
+                    <button class="truncate-btn" onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_hp', '정말로 입원치료 상담 데이터를 모두 삭제하시겠습니까?')">테이블 비우기</button>
+                </div>
+                <?php if (!empty($hp_inquiries)): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>이름</th>
+                                <th>연락처</th>
+                                <th>예약일</th>
+                                <th>입원유형</th>
+                                <th style="width: 300px;">문의내용</th>
+                                <th>신청일시</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $no = $total_hp - $offset_hp;
+                            foreach ($hp_inquiries as $hp): 
+                            ?>
+                            <tr>
+                                <td><?php echo $no--; ?></td>
+                                <td><?php echo $hp['name']; ?></td>
+                                <td><?php echo format_phone($hp['contact']); ?></td>
+                                <td><?php echo $hp['reservation_date']; ?></td>
+                                <td><?php echo $hp['hp_type']; ?></td>
+                                <td class="inquiry-content"><?php echo $hp['content']; ?></td>
+                                <td><?php echo $hp['created_at']; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <div class="paging_wrap">
+                      <ul class="paging">
+                        <?php if ($page_hp > 1): ?>
+                          <li><a href="?page_fast=<?php echo $page_fast; ?>&page_diet=<?php echo $page_diet; ?>&page_hp=1">&laquo;</a></li>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = $group_start_hp; $i <= $group_end_hp; $i++): ?>
+                          <li <?php echo $i == $page_hp ? 'class="on"' : ''; ?>><a href="?page_fast=<?php echo $page_fast; ?>&page_diet=<?php echo $page_diet; ?>&page_hp=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                        <?php endfor; ?>
+                        
+                        <?php if ($page_hp < $total_pages_hp): ?>
+                          <li><a href="?page_fast=<?php echo $page_fast; ?>&page_diet=<?php echo $page_diet; ?>&page_hp=<?php echo $page_hp + 1; ?>">&raquo;</a></li>
+                        <?php endif; ?>
+                      </ul>
+                    </div>
+                <?php else: ?>
+                    <p>표시할 입원치료 상담 데이터가 없습니다.</p>
                 <?php endif; ?>
             </div>
 

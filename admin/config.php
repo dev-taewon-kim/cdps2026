@@ -8,12 +8,12 @@ define('DB_DATABASE', 'cdps2026');
 function db_connect() {
     // DB_HOST로 접속 실패하면 mariadb로 시도
     try {
-        $pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE.';charset=utf8', DB_USERNAME, DB_PASSWORD);
+        $pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE.';charset=utf8mb4', DB_USERNAME, DB_PASSWORD);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
     } catch(PDOException $e) {
         try {
-            $pdo = new PDO('mysql:host=mariadb;dbname='.DB_DATABASE.';charset=utf8', DB_USERNAME, DB_PASSWORD);
+            $pdo = new PDO('mysql:host=mariadb;dbname='.DB_DATABASE.';charset=utf8mb4', DB_USERNAME, DB_PASSWORD);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch(PDOException $e2) {
