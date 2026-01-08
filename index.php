@@ -894,40 +894,42 @@
           <p>맑은숲998한의원에서 체질에 맞춘 다이어트 상담을 도와드립니다.</p>
         </div><!-- // title -->
 
-        <ul class="inq_con">
-          <li><input type="text" placeholder="이름"></li>
-          <li><input type="text" placeholder="연락처 (- 없이 숫자만 입력)"></li>
-          <li><input type="text" placeholder="희망 진료일 (260908 숫자만 입력)"></li>
-          <li>
-            <select>
-              <option value="">비만 유형</option>
-              <option value="다이어트">다이어트</option>
-              <option value="부분비만">부분비만</option>
-              <option value="산후비만">산후비만</option>
-              <option value="고도비만">고도비만</option>
-              <option value="튼살치료">튼살치료</option>
-              <option value="기타">기타</option>
-            </select>
-          </li>
-          <li>
-            <textarea name="" id="" placeholder="주요 고민"></textarea>
-          </li>
-        </ul><!-- // inq_con -->
+        <form method="post" action="/admin/submit_inquiry_diet.php">
+          <ul class="inq_con">
+            <li><input type="text" name="name" placeholder="이름" required></li>
+            <li><input type="text" name="contact" placeholder="연락처 (- 없이 숫자만 입력)" required pattern="[0-9]{10,11}"></li>
+            <li><input type="text" name="reservation_date" placeholder="희망 진료일 선택" onfocus="(this.type='date'); this.showPicker();" onblur="(this.value=='' ? this.type='text' : this.type='date')" required></li>
+            <li>
+              <select name="diet_type" required>
+                <option value="">비만 유형 선택</option>
+                <option value="다이어트">다이어트</option>
+                <option value="부분비만">부분비만</option>
+                <option value="산후비만">산후비만</option>
+                <option value="고도비만">고도비만</option>
+                <option value="튼살치료">튼살치료</option>
+                <option value="기타">기타</option>
+              </select>
+            </li>
+            <li>
+              <textarea name="content" placeholder="주요 고민"></textarea>
+            </li>
+          </ul><!-- // inq_con -->
 
-        <div class="inq_bot">
-          <div class="privacy">
-            <input type="checkbox" name="" id="" value="Y" required>
-            <p>개인정보 수집/이용 동의하기</p>
-          </div><!-- // privacy -->
+          <div class="inq_bot">
+            <div class="privacy">
+              <input type="checkbox" name="privacy_agree" value="Y" required>
+              <p>개인정보 수집/이용 동의하기</p>
+            </div><!-- // privacy -->
 
-          <div class="btn_wrap">
-            <ul>
-              <li><a href=""><img src="./images/con17_kakao.png" alt=""></a></li>
-              <li><a href=""><img src="./images/con17_tel.png" alt=""></a></li>
-            </ul>
-            <button type="submit" class="in_btn" id="">상담신청</button>
-          </div><!-- // btn_wrap -->
-        </div><!-- // inq_bot -->
+            <div class="btn_wrap">
+              <ul>
+                <li><a href="https://buly.kr/AwgWNdj" target="_blank"><img src="./images/con17_kakao.png" alt=""></a></li>
+                <li><a href="tel:051-752-9981"><img src="./images/con17_tel.png" alt=""></a></li>
+              </ul>
+              <button type="submit" class="in_btn">상담신청</button>
+            </div><!-- // btn_wrap -->
+          </div><!-- // inq_bot -->
+        </form>
 
       </div><!-- // inner -->
     </section><!-- // con17 -->
@@ -1043,39 +1045,41 @@
           <p>맑은숲998한의원에서 입원치료 상담을 도와드립니다.</p>
         </div><!-- // title -->
 
-        <ul class="inq_con">
-          <li><input type="text" placeholder="이름"></li>
-          <li><input type="text" placeholder="연락처 (- 없이 숫자만 입력)"></li>
-          <li><input type="text" placeholder="희망 진료일 (260908 숫자만 입력)"></li>
-          <li>
-            <select>
-              <option value="">입원 유형</option>
-              <option value="산후조리">산후조리</option>
-              <option value="통증/재활">통증/재활</option>
-              <option value="교통사고">교통사고</option>
-              <option value="만성질환">만성질환</option>
-              <option value="기타">기타</option>
-            </select>
-          </li>
-          <li>
-            <textarea name="" id="" placeholder="주요 고민"></textarea>
-          </li>
-        </ul><!-- // inq_con -->
+        <form method="post" action="/admin/submit_inquiry_hp.php">
+          <ul class="inq_con">
+            <li><input type="text" name="name" placeholder="이름" required></li>
+            <li><input type="text" name="contact" placeholder="연락처 (- 없이 숫자만 입력)" required pattern="[0-9]{10,11}"></li>
+            <li><input type="text" name="reservation_date" placeholder="희망 진료일 선택" onfocus="(this.type='date'); this.showPicker();" onblur="(this.value=='' ? this.type='text' : this.type='date')" required></li>
+            <li>
+              <select name="hp_type" required>
+                <option value="">입원 유형 선택</option>
+                <option value="산후조리">산후조리</option>
+                <option value="통증/재활">통증/재활</option>
+                <option value="교통사고">교통사고</option>
+                <option value="만성질환">만성질환</option>
+                <option value="기타">기타</option>
+              </select>
+            </li>
+            <li>
+              <textarea name="content" placeholder="주요 고민"></textarea>
+            </li>
+          </ul><!-- // inq_con -->
 
-        <div class="inq_bot">
-          <div class="privacy">
-            <input type="checkbox" name="" id="" value="Y" required>
-            <p>개인정보 수집/이용 동의하기</p>
-          </div><!-- // privacy -->
+          <div class="inq_bot">
+            <div class="privacy">
+              <input type="checkbox" name="privacy_agree" value="Y" required>
+              <p>개인정보 수집/이용 동의하기</p>
+            </div><!-- // privacy -->
 
-          <div class="btn_wrap">
-            <ul>
-              <li><a href=""><img src="./images/con17_kakao.png" alt=""></a></li>
-              <li><a href=""><img src="./images/con17_tel.png" alt=""></a></li>
-            </ul>
-            <button type="submit" class="in_btn" id="submit_quick_inquiry">상담신청</button>
-          </div><!-- // btn_wrap -->
-        </div><!-- // inq_bot -->
+            <div class="btn_wrap">
+              <ul>
+                <li><a href="https://buly.kr/AwgWNdj" target="_blank"><img src="./images/con17_kakao.png" alt=""></a></li>
+                <li><a href="tel:051-752-9981"><img src="./images/con17_tel.png" alt=""></a></li>
+              </ul>
+              <button type="submit" class="in_btn">상담신청</button>
+            </div><!-- // btn_wrap -->
+          </div><!-- // inq_bot -->
+        </form>
 
       </div><!-- // inner -->
     </section><!-- // con20 -->

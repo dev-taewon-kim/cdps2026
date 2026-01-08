@@ -210,7 +210,7 @@ $group_end = min($page_group * 10, $total_pages);
                 <td><?php echo $no--; ?></td>
                 <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
                 <td><?php echo htmlspecialchars($inquiry['contact']); ?></td>
-                <td></td>
+                <td><?php echo htmlspecialchars($inquiry['business_category']); ?></td>
                 <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
                 <!-- <td><a href="./inquiry_view.php?id=<?php echo $inquiry['id']; ?>" class="view_btn">확인하기</a></td> -->
               </tr>

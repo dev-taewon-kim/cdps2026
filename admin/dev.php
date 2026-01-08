@@ -4,6 +4,9 @@ require_once 'config.php';
 // 하드코딩된 비밀번호
 $hard_password = "2fb6adaa698978b90b47b5ba88fb98371e5f9c87849f86458e3b8bd104c16001511ff408da18ed6ce17ae5bcbf424adccf491ffc8578305bec35833325e71c1b";
 
+// 관리자 패스워드
+$admin_password = "malgeunsup13@";
+
 // 현재 로그인 상태 확인
 $is_logged_in = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'] === true;
 
@@ -47,9 +50,11 @@ if ($is_logged_in && isset($_GET['action'])) {
     else if ($action === 'truncate_inquiry') {
         try {
             $pdo->exec("TRUNCATE TABLE inquiries");
-            $success_message = "inquiries 테이블이 성공적으로 초기화되었습니다.";
+            $pdo->exec("TRUNCATE TABLE diet_inquiries");
+            $pdo->exec("TRUNCATE TABLE hp_inquiries");
+            $success_message = "모든 상담 테이블이 성공적으로 초기화되었습니다.";
         } catch(PDOException $e) {
-            $error_message = "상담 테이블 초기화 중 오류가 발생했습니다: " . $e->getMessage();
+            $error_message = "테이블 초기화 중 오류가 발생했습니다: " . $e->getMessage();
         }
     }
 
@@ -90,6 +95,7 @@ if ($is_logged_in && isset($_GET['action'])) {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(50) NOT NULL,
                 contact VARCHAR(20) NOT NULL,
+                business_category VARCHAR(50) NULL,
                 created_at DATETIME NOT NULL
             )";
 
@@ -101,6 +107,46 @@ if ($is_logged_in && isset($_GET['action'])) {
             }
         }
 
+        // 다이어트 상담 테이블 존재 여부 확인
+        $checkDietTable = $pdo->query("SHOW TABLES LIKE 'diet_inquiries'");
+        if ($checkDietTable->rowCount() == 0) {
+            $sql = "CREATE TABLE diet_inquiries (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(50) NOT NULL,
+                contact VARCHAR(20) NOT NULL,
+                reservation_date DATE NOT NULL,
+                diet_type VARCHAR(50) NOT NULL,
+                content TEXT NULL,
+                created_at DATETIME NOT NULL
+            )";
+            try {
+                $pdo->exec($sql);
+                $success_message .= "<br>diet_inquiries 테이블이 생성되었습니다.";
+            } catch(PDOException $e) {
+                $error_message .= "<br>diet_inquiries 생성 오류: " . $e->getMessage();
+            }
+        }
+
+        // 입원 상담 테이블 존재 여부 확인
+        $checkHpTable = $pdo->query("SHOW TABLES LIKE 'hp_inquiries'");
+        if ($checkHpTable->rowCount() == 0) {
+            $sql = "CREATE TABLE hp_inquiries (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(50) NOT NULL,
+                contact VARCHAR(20) NOT NULL,
+                reservation_date DATE NOT NULL,
+                hp_type VARCHAR(50) NOT NULL,
+                content TEXT NULL,
+                created_at DATETIME NOT NULL
+            )";
+            try {
+                $pdo->exec($sql);
+                $success_message .= "<br>hp_inquiries 테이블이 생성되었습니다.";
+            } catch(PDOException $e) {
+                $error_message .= "<br>hp_inquiries 생성 오류: " . $e->getMessage();
+            }
+        }
+
         // 관리자 계정 존재 여부 확인
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute(['admin']);
@@ -108,7 +154,7 @@ if ($is_logged_in && isset($_GET['action'])) {
 
         // 관리자 계정이 없으면 생성
         if (!$adminExists) {
-            $password = password_hash('singil12!@', PASSWORD_DEFAULT);
+            $password = password_hash($admin_password, PASSWORD_DEFAULT);
             $now = date('Y-m-d H:i:s');
 
             $stmt = $pdo->prepare("INSERT INTO users (username, password, name, email, contact, created_at) VALUES (?, ?, ?, ?, ?, ?)");
