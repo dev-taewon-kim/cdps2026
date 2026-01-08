@@ -199,7 +199,7 @@ $group_end = min($page_group * 10, $total_pages);
               <th>성명</th>
               <th>연락처</th>
               <th>문의내용</th>
-              <th>날짜</th>
+              <th>작성일</th>
             </tr>
             <?php if (!empty($inquiries)): ?>
               <?php 
@@ -211,13 +211,12 @@ $group_end = min($page_group * 10, $total_pages);
                 <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
                 <td><?php echo htmlspecialchars($inquiry['contact']); ?></td>
                 <td><?php echo htmlspecialchars($inquiry['business_category']); ?></td>
-                <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
-                <!-- <td><a href="./inquiry_view.php?id=<?php echo $inquiry['id']; ?>" class="view_btn">확인하기</a></td> -->
+                <td><?php echo date('Y-m-d', strtotime($inquiry['created_at'])); ?></td>
               </tr>
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="5" style="text-align: center; padding: 50px 0;">등록된 문의가 없습니다.</td>
+                <td colspan="6" style="text-align: center; padding: 50px 0;">등록된 문의가 없습니다.</td>
               </tr>
             <?php endif; ?>
           </tbody>

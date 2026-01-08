@@ -18,13 +18,13 @@ if ($id <= 0) {
 $pdo = db_connect();
 
 // 문의 정보 조회
-$sql = "SELECT * FROM inquiries WHERE id = ?";
+$sql = "SELECT * FROM hp_inquiries WHERE id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id]);
 $inquiry = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$inquiry) {
-    header('Location: /admin/inquiry_list.php');
+    header('Location: /admin/inquiry_hp.php');
     exit;
 }
 
@@ -158,8 +158,8 @@ function format_phone($phone) {
             <tr>
               <th>No.</th>
               <td><?php echo $inquiry['id']; ?></td>
-              <th>날짜</th>
-              <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
+              <th>작성일</th>
+              <td><?php echo date('Y-m-d', strtotime($inquiry['created_at'])); ?></td>
             </tr>
             <tr>
               <th>성명</th>
@@ -169,13 +169,13 @@ function format_phone($phone) {
             </tr>
             <tr>
               <th>희망 진료일</th>
-              <td></td>
+              <td><?php echo date('Y-m-d', strtotime($inquiry['reservation_date'])); ?></td>
               <th>입원 유형</th>
-              <td></td>
+              <td><?php echo $inquiry['hp_type']; ?></td>
             </tr>
             <tr>
               <th>주요 고민</th>
-              <td colspan="3"></td>
+              <td colspan="3"><?php echo nl2br($inquiry['content']); ?></td>
             </tr>
           </tbody>
         </table>

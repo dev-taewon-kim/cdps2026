@@ -23,8 +23,8 @@ $offset = ($page - 1) * $per_page;
 $pdo = db_connect();
 
 try {
-    // inquiries 테이블 존재 여부 확인
-    $checkTable = $pdo->query("SHOW TABLES LIKE 'inquiries'");
+    // diet_inquiries 테이블 존재 여부 확인
+    $checkTable = $pdo->query("SHOW TABLES LIKE 'diet_inquiries'");
     $tableExists = $checkTable->rowCount() > 0;
     
     if (!$tableExists) {
@@ -34,7 +34,7 @@ try {
         $total_pages = 1;
     } else {
         // 전체 문의 수 조회
-        $count_sql = "SELECT COUNT(*) FROM inquiries";
+        $count_sql = "SELECT COUNT(*) FROM diet_inquiries";
         $count_stmt = $pdo->query($count_sql);
         $total_inquiries = $count_stmt->fetchColumn();
 
@@ -43,7 +43,7 @@ try {
         $total_pages = max(1, $total_pages); // 최소 1페이지
 
         // 현재 페이지 문의 조회
-        $sql = "SELECT * FROM inquiries ORDER BY id DESC LIMIT :offset, :per_page";
+        $sql = "SELECT * FROM diet_inquiries ORDER BY id DESC LIMIT :offset, :per_page";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
@@ -187,9 +187,10 @@ $group_end = min($page_group * 10, $total_pages);
 
         <table class="admin_tbl">
           <colgroup>
-            <col width="7%">
+            <col width="5%">
             <col width="10%">
-            <col width="*">
+            <col width="15%">
+            <col width="20%">
             <col width="20%">
             <col width="15%">
             <col width="15%">
@@ -199,8 +200,9 @@ $group_end = min($page_group * 10, $total_pages);
               <th>No.</th>
               <th>성명</th>
               <th>연락처</th>
-              <th>문의유형</th>
-              <th>날짜</th>
+              <th>비만유형</th>
+              <th>희망진료일</th>
+              <th>작성일</th>
               <th>자세히보기</th>
             </tr>
             <?php if (!empty($inquiries)): ?>
@@ -211,15 +213,16 @@ $group_end = min($page_group * 10, $total_pages);
               <tr>
                 <td><?php echo $no--; ?></td>
                 <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
-                <td><?php echo htmlspecialchars($inquiry['contact']); ?></td>
-                <td></td>
-                <td><?php echo date('Y.m.d', strtotime($inquiry['created_at'])); ?></td>
+                <td><?php echo htmlspecialchars(format_phone($inquiry['contact'])); ?></td>
+                <td><?php echo htmlspecialchars($inquiry['diet_type']); ?></td>
+                <td><?php echo htmlspecialchars($inquiry['reservation_date']); ?></td>
+                <td><?php echo date('Y-m-d', strtotime($inquiry['created_at'])); ?></td>
                 <td><a href="./inquiry_diet_view.php?id=<?php echo $inquiry['id']; ?>" class="view_btn">확인하기</a></td>
               </tr>
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="5" style="text-align: center; padding: 50px 0;">등록된 문의가 없습니다.</td>
+                <td colspan="7" style="text-align: center; padding: 50px 0;">등록된 문의가 없습니다.</td>
               </tr>
             <?php endif; ?>
           </tbody>

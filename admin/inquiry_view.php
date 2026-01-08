@@ -157,9 +157,13 @@ function format_phone($phone) {
             </tr>
             <tr>
               <th>성명</th>
-              <td><?php echo $inquiry['name']; ?></td>
+              <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
               <th>연락처</th>
               <td><?php echo format_phone($inquiry['contact']); ?></td>
+            </tr>
+            <tr>
+              <th>진료항목</th>
+              <td colspan="3"><?php echo htmlspecialchars($inquiry['business_category']); ?></td>
             </tr>
           </tbody>
         </table>
