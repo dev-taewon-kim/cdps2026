@@ -533,7 +533,12 @@ $next = $nextStmt->fetch(PDO::FETCH_ASSOC);
 
 </script>
 
-
+<style>
+  .col_view_box img {
+    max-width: 100%;
+    height: auto;
+}
+</style>
 
 </body>
 </html>

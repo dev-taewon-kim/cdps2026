@@ -52,6 +52,11 @@ $is_notice = isset($current['is_notice']) ? (int)$current['is_notice'] : 0;
 $thumb_mode = $current['thumbnail_mode'] ?? 'default';
 $content = $current['content'] ?? '';
 $thumbnail_url = $current['thumbnail_url'] ?? $default_thumb;
+// 기존 업로드 썸네일 경로 (수정 시 교체 여부 판단용)
+$old_uploaded_thumb = null;
+if ($current && isset($current['thumbnail_url']) && strncmp($current['thumbnail_url'], '/uploaded_images/', 17) === 0) {
+  $old_uploaded_thumb = $current['thumbnail_url'];
+}
 
 // POST 값으로 덮어써서 사용자가 입력한 내용을 그대로 유지
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -131,6 +136,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $errors[] = '썸네일 저장에 실패했습니다.';
                 } else {
                     $thumbnail_url = '/uploaded_images/' . $safe_name;
+                  // 이전 업로드 썸네일을 새 파일로 교체한 경우에만 정리
+                  if ($old_uploaded_thumb && $old_uploaded_thumb !== $thumbnail_url) {
+                    $oldPath = __DIR__ . $old_uploaded_thumb;
+                    if (is_file($oldPath)) {
+                      @unlink($oldPath);
+                    }
+                  }
                 }
             }
         }
@@ -405,13 +417,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <tr>
                 <th>내용</th>
                 <td>
-                  <textarea name="content" id="ck-editor" required><?php echo h($content); ?></textarea>
+                  <textarea name="content" id="ck-editor"><?php echo h($content); ?></textarea>
                 </td>
               </tr>
             </tbody>
           </table><!-- // tbl_cwr -->
 
-          <button type="submit" class="col_list_btn col_cmpl_btn"><?php echo $editing_id > 0 ? '수정' : '등록'; ?></button>
+          <button type="submit" class="col_list_btn col_cmpl_btn" onclick=""><?php echo $editing_id > 0 ? '수정' : '등록'; ?></button>
           </form>
         </div><!-- // cv_wrap -->
         
@@ -655,7 +667,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </script>
 
-<script type="module" src="./css/js/ckeditor5/main.js"></script>
+<link rel="stylesheet" href="./css/js/ckeditor5/ckeditor5.css">
+<script type="module" src="./css/js/ckeditor_main.js"></script>
+<style>
+  .ck-editor__editable {
+    min-height: 300px;
+}
+</style>
+
+<script>
+  // 폼 제출 시 textarea 내용으로 업데이트
+  document.querySelector('form').addEventListener('submit', function() {
+    if (window.myEditor) {
+      const content = window.myEditor.getData();
+      document.querySelector('textarea[name="content"]').value = content;
+    }
+  });
+</script>
+
 <script>
   // 썸네일 업로드 선택 시에만 파일 입력 활성화
   const thumbRadios = document.querySelectorAll('input[name="thumb_mode"]');

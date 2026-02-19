@@ -275,7 +275,7 @@ if ($end - $start + 1 < $maxLinks) {
                     </div>
                     <div class="txt_wrap">
                       <h4><?php echo h($post['title']); ?></h4>
-                      <p><?php echo h(excerpt($post['content'])); ?></p>
+                      <p><?php echo excerpt($post['content']); ?></p>
                     </div>
                   </a>
                 </li>

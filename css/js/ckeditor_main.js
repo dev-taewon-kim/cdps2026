@@ -1,8 +1,3 @@
-/**
- * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
- * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cc0AYKQIwJCgrLA7JlKAHMQGwDMImZALCSbCNRpulYRbIdTg8hANYB7ZAjDAUYUaIkSEAXUiwAZgBMlmEpghygA===
- */
-
 import {
   ClassicEditor,
   Autosave,
@@ -45,9 +40,10 @@ import {
   TodoList,
   Underline,
   MediaEmbed,
-} from "ckeditor5";
+  SimpleUploadAdapter,
+} from "./ckeditor5/index.js";
 
-import translations from "ckeditor5/translations/ko.js";
+import translations from "./ckeditor5/translations/ko.js";
 
 const LICENSE_KEY = "GPL";
 
@@ -209,7 +205,7 @@ const editorConfig = {
   menuBar: {
     isVisible: true,
   },
-  placeholder: "Type or paste your content here!",
+  placeholder: "내용을 입력하세요",
   table: {
     contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
   },
@@ -231,8 +227,13 @@ const editorConfig = {
 };
 
 const target = document.querySelector("#ck-editor");
+const myEditor = null;
 if (target) {
-  ClassicEditor.create(target, editorConfig).catch((error) => {
-    console.error("CKEditor init failed", error);
-  });
+  ClassicEditor.create(target, editorConfig)
+    .then((editor) => {
+      window.myEditor = editor;
+    })
+    .catch((error) => {
+      console.error("CKEditor init failed", error);
+    });
 }
