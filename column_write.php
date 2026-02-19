@@ -1,3 +1,127 @@
+<?php
+require_once __DIR__ . '/admin/config.php';
+
+// 관리자만 접근
+if (!is_logged_in() || !is_admin()) {
+    header('Location: /admin/login.php');
+    exit;
+}
+
+$pdo = db_connect();
+
+function ensure_columns_table(PDO $pdo): void {
+    $check = $pdo->query("SHOW TABLES LIKE 'columns'");
+    if ($check->rowCount() === 0) {
+        $sql = "CREATE TABLE columns (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(200) NOT NULL,
+            is_notice TINYINT(1) NOT NULL DEFAULT 0,
+            thumbnail_mode VARCHAR(20) NOT NULL DEFAULT 'default',
+            thumbnail_url VARCHAR(500) NOT NULL DEFAULT '/images/col_img.jpg',
+            content MEDIUMTEXT NULL,
+            created_at DATETIME NOT NULL,
+            updated_at DATETIME NULL
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+        $pdo->exec($sql);
+    }
+}
+
+ensure_columns_table($pdo);
+
+$errors = [];
+$title = trim($_POST['title'] ?? '');
+$is_notice = isset($_POST['is_notice']) ? 1 : 0;
+$thumb_mode = $_POST['thumb_mode'] ?? 'default';
+$content = $_POST['content'] ?? '';
+$thumbnail_url = '/images/col_img.jpg';
+
+$allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'tif'];
+$max_size = 50 * 1024 * 1024; // 50MB
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($title === '') {
+        $errors[] = '제목을 입력해주세요.';
+    }
+
+    if (trim(strip_tags($content)) === '') {
+        $errors[] = '내용을 입력해주세요.';
+    }
+
+    // 썸네일 처리
+    if ($thumb_mode === 'upload') {
+        if (!isset($_FILES['thumbnail']) || $_FILES['thumbnail']['error'] === UPLOAD_ERR_NO_FILE) {
+            $errors[] = '썸네일 파일을 선택해주세요.';
+        } else {
+            $file = $_FILES['thumbnail'];
+
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+              $msg = '썸네일 업로드 중 오류가 발생했습니다. (' . $file['error'] . ')';
+              if ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE) {
+                $msg = '서버 업로드 제한을 초과했습니다. (php.ini의 upload_max_filesize/post_max_size 확인)';
+              }
+              $errors[] = $msg;
+            }
+
+            if (empty($errors)) {
+              if ($file['size'] > $max_size) {
+                $errors[] = '썸네일 용량은 50MB 이하여야 합니다.';
+              }
+
+              $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+              if (!in_array($ext, $allowed_ext, true)) {
+                $errors[] = '허용되지 않는 이미지 형식입니다.';
+              }
+
+              if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+                $errors[] = '유효한 업로드 파일이 아닙니다.';
+              } else {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $file['tmp_name']);
+                finfo_close($finfo);
+                if (strpos($mime, 'image/') !== 0) {
+                  $errors[] = '이미지 파일만 업로드할 수 있습니다.';
+                }
+              }
+            }
+
+            if (empty($errors)) {
+                $upload_dir = __DIR__ . '/uploaded_images';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0755, true);
+                }
+
+                $hash = hash_file('sha256', $file['tmp_name']);
+                $safe_name = $hash . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', basename($file['name']));
+                $target_path = $upload_dir . '/' . $safe_name;
+
+                if (!move_uploaded_file($file['tmp_name'], $target_path)) {
+                    $errors[] = '썸네일 저장에 실패했습니다.';
+                } else {
+                    $thumbnail_url = '/uploaded_images/' . $safe_name;
+                }
+            }
+        }
+    }
+
+    // 기본 썸네일 유지 시 thumbnail_url은 기본값 사용
+
+    if (empty($errors)) {
+        $now = date('Y-m-d H:i:s');
+        $stmt = $pdo->prepare("INSERT INTO columns (title, is_notice, thumbnail_mode, thumbnail_url, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NULL)");
+        $stmt->execute([
+            $title,
+            $is_notice,
+            $thumb_mode,
+            $thumbnail_url,
+            $content,
+            $now
+        ]);
+
+        header('Location: /column.php');
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -181,6 +305,15 @@
 
         <div class="cv_wrap">
 
+          <?php if (!empty($errors)): ?>
+            <div class="message error" style="margin-bottom:15px; color:#c62828;">
+              <?php foreach ($errors as $err): ?>
+                <div><?php echo h($err); ?></div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+
+          <form method="post" enctype="multipart/form-data">
           <table class="tbl_cwr">
             <colgroup>
               <col width="20%">
@@ -189,33 +322,43 @@
             <tbody>
               <tr>
                 <th>제목</th>
-                <td><input type="text"></td>
+                <td><input type="text" name="title" value="<?php echo h($title); ?>" required></td>
               </tr>
               <tr>
                 <th>썸네일</th>
                 <td>
-                  <input type="file">
-                  <p class="r_txt">* 권장사이즈 : 600 x 420px</p>
+                  <label style="margin-right:10px;">
+                    <input type="radio" name="thumb_mode" value="default" <?php echo $thumb_mode === 'upload' ? '' : 'checked'; ?>> 기본 썸네일 사용 (/images/col_img.jpg)
+                  </label>
+                  <label>
+                    <input type="radio" name="thumb_mode" value="upload" <?php echo $thumb_mode === 'upload' ? 'checked' : ''; ?>> 직접 업로드
+                  </label>
+                  <div style="margin-top:10px;">
+                    <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/gif,image/bmp,image/webp,image/tiff">
+                    <p class="r_txt">* 권장사이즈 : 600 x 420px</p>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <th>공지</th>
                 <td>
                   <label>
-                    <input type="checkbox" name="is_notice">
+                    <input type="checkbox" name="is_notice" <?php echo $is_notice ? 'checked' : ''; ?>>
                     <span class="label_txt">공지로 표시</span>
                   </label>
                 </td>
               </tr>
               <tr>
                 <th>내용</th>
-                <td><textarea name="" id=""></textarea></td>
+                <td>
+                  <textarea name="content" id="ck-editor" required><?php echo h($content); ?></textarea>
+                </td>
               </tr>
             </tbody>
           </table><!-- // tbl_cwr -->
 
-          
-          <button class="col_list_btn col_cmpl_btn"><a href="">등록</a></button>
+          <button type="submit" class="col_list_btn col_cmpl_btn">등록</button>
+          </form>
         </div><!-- // cv_wrap -->
         
 
@@ -355,18 +498,12 @@
     offset: 300
   });
 
-
-
-
-
   $(document).ready(function() {
     // 탭모바일 네비 버튼
     $('.navi_btn').click(function() {
       $(this).toggleClass('on');
       $('.navi').stop().fadeToggle()
     });
-
-    
 
     // 퀵버튼
     $('#quick_btn .top_btn').click(function(){
@@ -464,7 +601,18 @@
 
 </script>
 
-
+<script type="module" src="./css/js/ckeditor5/main.js"></script>
+<script>
+  // 썸네일 업로드 선택 시에만 파일 입력 활성화
+  const thumbRadios = document.querySelectorAll('input[name="thumb_mode"]');
+  const thumbInput = document.getElementById('thumbnail');
+  function toggleThumbInput() {
+    const isUpload = document.querySelector('input[name="thumb_mode"]:checked').value === 'upload';
+    thumbInput.disabled = !isUpload;
+  }
+  thumbRadios.forEach(r => r.addEventListener('change', toggleThumbInput));
+  toggleThumbInput();
+</script>
 
 </body>
 </html>

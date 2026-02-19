@@ -1,3 +1,61 @@
+<?php
+require_once __DIR__ . '/admin/config.php';
+
+function ensure_columns_table(PDO $pdo): void {
+  $check = $pdo->query("SHOW TABLES LIKE 'columns'");
+  if ($check->rowCount() === 0) {
+    $sql = "CREATE TABLE columns (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      is_notice TINYINT(1) NOT NULL DEFAULT 0,
+      thumbnail_mode VARCHAR(20) NOT NULL DEFAULT 'default',
+      thumbnail_url VARCHAR(500) NOT NULL DEFAULT '/images/col_img.jpg',
+      content MEDIUMTEXT NULL,
+      created_at DATETIME NOT NULL,
+      updated_at DATETIME NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+    $pdo->exec($sql);
+  }
+}
+
+$pdo = db_connect();
+ensure_columns_table($pdo);
+
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id <= 0) {
+  header('Location: /column.php');
+  exit;
+}
+
+$stmt = $pdo->prepare('SELECT * FROM columns WHERE id = ?');
+$stmt->execute([$id]);
+$column = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$column) {
+  http_response_code(404);
+  echo '존재하지 않는 글입니다.';
+  exit;
+}
+
+$defaultThumb = '/images/col_img.jpg';
+$column['thumbnail_url'] = $column['thumbnail_url'] ?: $defaultThumb;
+
+$prevStmt = $pdo->prepare('SELECT id, title FROM columns WHERE (is_notice > :notice) OR (is_notice = :notice AND (created_at > :created OR (created_at = :created AND id > :id))) ORDER BY is_notice DESC, created_at DESC, id DESC LIMIT 1');
+$prevStmt->execute([
+  ':notice' => $column['is_notice'],
+  ':created' => $column['created_at'],
+  ':id' => $column['id'],
+]);
+$prev = $prevStmt->fetch(PDO::FETCH_ASSOC);
+
+$nextStmt = $pdo->prepare('SELECT id, title FROM columns WHERE (is_notice < :notice) OR (is_notice = :notice AND (created_at < :created OR (created_at = :created AND id < :id))) ORDER BY is_notice DESC, created_at DESC, id DESC LIMIT 1');
+$nextStmt->execute([
+  ':notice' => $column['is_notice'],
+  ':created' => $column['created_at'],
+  ':id' => $column['id'],
+]);
+$next = $nextStmt->fetch(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -176,26 +234,44 @@
       <div class="inner">
         <div class="title" data-aos="fade-up">
           <p class="sub_tit">998 <b>전문칼럼</b></p>
-          <h2>제목입니다 제목입니다</h2>
+          <h2>
+            <?php echo h($column['title']); ?>
+          </h2>
         </div><!-- // title -->
 
         <div class="cv_wrap" data-aos="fade-up" data-aos-delay="300">
           <div class="col_view_box">
-            <!-- 에디터로 작성한 부분 시작 -->
-            <img src="./images/col_img_view.jpg" alt="">
-            <p>내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다 내용입니다</p>
-            <!-- 에디터로 작성한 부분 끝 -->
+          <!-- 에디터로 작성한 부분 시작 -->  
+          <?php echo $column['content']; ?>
           </div><!-- // col_view_box -->
 
           <div class="col_pn">
-            <div class="prev"><a href="">
-              <img src="/images/c_view_prev.png" alt="">
-              <p>이전글 제목입니다 이전글 제목입니다 (이전 글 없을 시 : '최신글입니다.' 클릭 X)</p>
-            </a></div><!-- // prev -->
-            <div class="next"><a href="">
-              <img src="/images/c_view_next.png" alt="">
-              <p>다음글 제목입니다</p>
-            </a></div><!-- // next -->
+            <div class="prev">
+              <?php if ($prev): ?>
+                <a href="/column_view.php?id=<?php echo urlencode((string)$prev['id']); ?>">
+                  <img src="/images/c_view_prev.png" alt="">
+                  <p><?php echo h($prev['title']); ?></p>
+                </a>
+              <?php else: ?>
+                <div style="display:flex; align-items:center; gap:8px; color:#777;">
+                  <img src="/images/c_view_prev.png" alt="">
+                  <p>최신글입니다.</p>
+                </div>
+              <?php endif; ?>
+            </div><!-- // prev -->
+            <div class="next">
+              <?php if ($next): ?>
+                <a href="/column_view.php?id=<?php echo urlencode((string)$next['id']); ?>">
+                  <img src="/images/c_view_next.png" alt="">
+                  <p><?php echo h($next['title']); ?></p>
+                </a>
+              <?php else: ?>
+                <div style="display:flex; align-items:center; gap:8px; color:#777;">
+                  <img src="/images/c_view_next.png" alt="">
+                  <p>마지막 글입니다.</p>
+                </div>
+              <?php endif; ?>
+            </div><!-- // next -->
           </div><!-- // col_pn -->
 
           <button class="col_list_btn"><a href="/column.php">목록</a></button>

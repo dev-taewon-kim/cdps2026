@@ -78,9 +78,18 @@ if ($is_logged_in && isset($_GET['action'])) {
         } catch(PDOException $e) { $error_message = "오류: " . $e->getMessage(); }
     }
 
+    // 칼럼 테이블 초기화
+    else if ($action === 'truncate_columns') {
+        try {
+            $pdo->exec("TRUNCATE TABLE columns");
+            $success_message = "컬럼 테이블이 초기화되었습니다.";
+        } catch(PDOException $e) { $error_message = "오류: " . $e->getMessage(); }
+    }
+
     // 모든 테이블 완전 삭제
     else if ($action === 'drop_all') {
         try {
+            $pdo->exec("DROP TABLE IF EXISTS columns");
             $pdo->exec("DROP TABLE IF EXISTS diet_inquiries");
             $pdo->exec("DROP TABLE IF EXISTS hp_inquiries");
             $pdo->exec("DROP TABLE IF EXISTS inquiries");
@@ -177,6 +186,27 @@ if ($is_logged_in && isset($_GET['action'])) {
                 $success_message .= "<br>hp_inquiries 테이블이 생성되었습니다.";
             } catch(PDOException $e) {
                 $error_message .= "<br>hp_inquiries 생성 오류: " . $e->getMessage();
+            }
+        }
+
+        // 컬럼 테이블 존재 여부 확인
+        $checkColumnsTable = $pdo->query("SHOW TABLES LIKE 'columns'");
+        if ($checkColumnsTable->rowCount() == 0) {
+            $sql = "CREATE TABLE columns (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(200) NOT NULL,
+                is_notice TINYINT(1) NOT NULL DEFAULT 0,
+                thumbnail_mode VARCHAR(20) NOT NULL DEFAULT 'default',
+                thumbnail_url VARCHAR(500) NOT NULL DEFAULT '/images/col_img.jpg',
+                content MEDIUMTEXT NULL,
+                created_at DATETIME NOT NULL,
+                updated_at DATETIME NULL
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+            try {
+                $pdo->exec($sql);
+                $success_message .= "<br>columns 테이블이 생성되었습니다.";
+            } catch(PDOException $e) {
+                $error_message .= "<br>columns 생성 오류: " . $e->getMessage();
             }
         }
 
@@ -545,6 +575,7 @@ function format_phone($phone) {
                 <button onclick="window.location.href='<?php echo $_SERVER['PHP_SELF']; ?>'">현재 테이블 조회</button>
                 <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=init', '모든 필수 테이블을 생성하고 초기화하시겠습니까?')">전체 테이블 초기 생성</button>
                 <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_inquiry', '정말로 모든 상담 테이블의 데이터를 삭제하시겠습니까?')">전체 상담 데이터 비우기</button>
+                <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate_columns', '정말로 칼럼 데이터를 모두 삭제하시겠습니까?')">칼럼 데이터 비우기</button>
                 <button onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=truncate', '정말로 사용자 테이블을 초기화하시겠습니까?')">사용자 데이터 비우기</button>
                 <button style="background-color: #f44336;" onclick="confirmAction('<?php echo $_SERVER['PHP_SELF']; ?>?action=drop_all', '정말로 모든 테이블을 삭제하시겠습니까? 데이터가 모두 소실됩니다.')">모든 테이블 완전 삭제 (Drop)</button>
                 <button onclick="openResetModal()">관리자 비밀번호 재설정</button>

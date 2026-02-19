@@ -1,3 +1,59 @@
+<?php
+require_once __DIR__ . '/admin/config.php';
+
+function ensure_columns_table(PDO $pdo): void {
+  $check = $pdo->query("SHOW TABLES LIKE 'columns'");
+  if ($check->rowCount() === 0) {
+    $sql = "CREATE TABLE columns (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      is_notice TINYINT(1) NOT NULL DEFAULT 0,
+      thumbnail_mode VARCHAR(20) NOT NULL DEFAULT 'default',
+      thumbnail_url VARCHAR(500) NOT NULL DEFAULT '/images/col_img.jpg',
+      content MEDIUMTEXT NULL,
+      created_at DATETIME NOT NULL,
+      updated_at DATETIME NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+    $pdo->exec($sql);
+  }
+}
+
+$pdo = db_connect();
+ensure_columns_table($pdo);
+
+$perPage = 6;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$defaultThumb = '/images/col_img.jpg';
+
+$total = (int)$pdo->query('SELECT COUNT(*) FROM columns')->fetchColumn();
+$totalPages = max(1, (int)ceil($total / $perPage));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $perPage;
+
+$stmt = $pdo->prepare('SELECT id, title, content, thumbnail_url, is_notice, created_at FROM columns ORDER BY is_notice DESC, created_at DESC, id DESC LIMIT :limit OFFSET :offset');
+$stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+function excerpt(string $html, int $len = 120): string {
+  $plain = trim(preg_replace('/\s+/', ' ', strip_tags($html)) ?? '');
+  if ($plain === '') {
+    return '';
+  }
+  if (mb_strlen($plain) <= $len) {
+    return $plain;
+  }
+  return mb_substr($plain, 0, $len) . '...';
+}
+
+$maxLinks = 5;
+$start = max(1, $page - (int)floor($maxLinks / 2));
+$end = min($totalPages, $start + $maxLinks - 1);
+if ($end - $start + 1 < $maxLinks) {
+  $start = max(1, $end - $maxLinks + 1);
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -204,177 +260,94 @@
           <!-- // title -->
 
           <ul class="main_col_list" data-aos="fade-up" data-aos-delay="300">
-            <li>
-              <a href="/column_view.php">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div class="img_wrap">
-                  <img src="./images/col_img.jpg" alt="" />
-                </div>
-                <!-- // img_wrap -->
-                <div class="txt_wrap">
-                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
-                  <p>
-                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
-                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
-                  </p>
-                </div>
-                <!-- // txt_wrap -->
-              </a>
-            </li>
+            <?php if (empty($posts)): ?>
+              <li style="width:100%; text-align:center; padding:40px 0;">등록된 칼럼이 없습니다.</li>
+            <?php else: ?>
+              <?php foreach ($posts as $post): ?>
+                <?php
+                  $thumb = $post['thumbnail_url'] ?: $defaultThumb;
+                  $link = '/column_view.php?id=' . urlencode((string)$post['id']);
+                ?>
+                <li>
+                  <a href="<?php echo $link; ?>">
+                    <div class="img_wrap">
+                      <img src="<?php echo h($thumb); ?>" alt="" />
+                    </div>
+                    <div class="txt_wrap">
+                      <h4><?php echo h($post['title']); ?></h4>
+                      <p><?php echo h(excerpt($post['content'])); ?></p>
+                    </div>
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </ul>
+          <!-- <ul class="main_col_list" data-aos="fade-up" data-aos-delay="300"></ul>
+              <a href="">
+                <div class="img_wrap">
+                  <img src="./images/col_img.jpg" alt="" />
+                </div>
+                <div class="txt_wrap">
+                  <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                  <p>
+                    내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용
+                    영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다
+                  </p>
+                </div>
+              </a>
+            </li>
+          </ul> -->
           <!-- // main_col_list -->
 
           <div class="paging_wrap">
             <ul class="paging">
-              <li class="page_arrow">
-                <a href="#"><img src="./images/btn_first.png" alt="맨 앞으로" /></a>
+              <?php $isFirst = $page <= 1; $isLast = $page >= $totalPages; ?>
+              <li class="page_arrow <?php echo $isFirst ? 'off' : ''; ?>">
+                <?php if ($isFirst): ?>
+                  <a><img src="./images/btn_first.png" alt="맨 앞으로" /></a>
+                <?php else: ?>
+                  <a href="?page=1"><img src="./images/btn_first.png" alt="맨 앞으로" /></a>
+                <?php endif; ?>
               </li>
-              <li class="page_arrow">
-                <a href="#"><img src="./images/btn_prev.png" alt="앞으로" /></a>
+              <li class="page_arrow <?php echo $isFirst ? 'off' : ''; ?>">
+                <?php if ($isFirst): ?>
+                  <a><img src="./images/btn_prev.png" alt="앞으로" /></a>
+                <?php else: ?>
+                  <a href="?page=<?php echo $page - 1; ?>"><img src="./images/btn_prev.png" alt="앞으로" /></a>
+                <?php endif; ?>
               </li>
-              <li class="on"><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li class="page_arrow">
-                <a href="#"><img src="./images/btn_next.png" alt="뒤로" /></a>
+
+              <?php for ($p = $start; $p <= $end; $p++): ?>
+                <li class="<?php echo $p === $page ? 'on' : ''; ?>">
+                  <?php if ($p === $page): ?>
+                    <a><?php echo $p; ?></a>
+                  <?php else: ?>
+                    <a href="?page=<?php echo $p; ?>"><?php echo $p; ?></a>
+                  <?php endif; ?>
+                </li>
+              <?php endfor; ?>
+
+              <li class="page_arrow <?php echo $isLast ? 'off' : ''; ?>">
+                <?php if ($isLast): ?>
+                  <a><img src="./images/btn_next.png" alt="뒤로" /></a>
+                <?php else: ?>
+                  <a href="?page=<?php echo $page + 1; ?>"><img src="./images/btn_next.png" alt="뒤로" /></a>
+                <?php endif; ?>
               </li>
-              <li class="page_arrow">
-                <a href="#"><img src="./images/btn_last.png" alt="맨 뒤로" /></a>
+              <li class="page_arrow <?php echo $isLast ? 'off' : ''; ?>">
+                <?php if ($isLast): ?>
+                  <a><img src="./images/btn_last.png" alt="맨 뒤로" /></a>
+                <?php else: ?>
+                  <a href="?page=<?php echo $totalPages; ?>"><img src="./images/btn_last.png" alt="맨 뒤로" /></a>
+                <?php endif; ?>
               </li>
             </ul>
           </div>
           <!-- // paging_wrap -->
 
-          <button class="col_wr_btn"><a href="/column_write.php">글쓰기</a></button>
+          <?php if (is_logged_in() && is_admin()): ?>
+            <button class="col_wr_btn"><a href="/column_write.php">글쓰기</a></button>
+          <?php endif; ?>
         </div>
       </section>
 
