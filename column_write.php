@@ -28,17 +28,46 @@ function ensure_columns_table(PDO $pdo): void {
 
 ensure_columns_table($pdo);
 
+$default_thumb = '/images/col_img.jpg';
+$editing_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $editing_id = isset($_POST['id']) ? (int)$_POST['id'] : $editing_id;
+}
+
+$current = null;
+if ($editing_id > 0) {
+  $stmt = $pdo->prepare('SELECT * FROM columns WHERE id = ?');
+  $stmt->execute([$editing_id]);
+  $current = $stmt->fetch(PDO::FETCH_ASSOC);
+  if (!$current) {
+    http_response_code(404);
+    echo '존재하지 않는 글입니다.';
+    exit;
+  }
+}
+
 $errors = [];
-$title = trim($_POST['title'] ?? '');
-$is_notice = isset($_POST['is_notice']) ? 1 : 0;
-$thumb_mode = $_POST['thumb_mode'] ?? 'default';
-$content = $_POST['content'] ?? '';
-$thumbnail_url = '/images/col_img.jpg';
+$title = $current['title'] ?? '';
+$is_notice = isset($current['is_notice']) ? (int)$current['is_notice'] : 0;
+$thumb_mode = $current['thumbnail_mode'] ?? 'default';
+$content = $current['content'] ?? '';
+$thumbnail_url = $current['thumbnail_url'] ?? $default_thumb;
+
+// POST 값으로 덮어써서 사용자가 입력한 내용을 그대로 유지
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $title = trim($_POST['title'] ?? $title);
+  $is_notice = isset($_POST['is_notice']) ? 1 : 0;
+  $thumb_mode = $_POST['thumb_mode'] ?? $thumb_mode;
+  $content = $_POST['content'] ?? $content;
+}
 
 $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'tif'];
 $max_size = 50 * 1024 * 1024; // 50MB
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // 업로드 처리 전 현재 썸네일을 기본으로 설정 (수정 시 기존 유지)
+  $thumbnail_url = $current['thumbnail_url'] ?? $default_thumb;
+
     if ($title === '') {
         $errors[] = '제목을 입력해주세요.';
     }
@@ -48,10 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 썸네일 처리
-    if ($thumb_mode === 'upload') {
-        if (!isset($_FILES['thumbnail']) || $_FILES['thumbnail']['error'] === UPLOAD_ERR_NO_FILE) {
-            $errors[] = '썸네일 파일을 선택해주세요.';
-        } else {
+    if ($thumb_mode === 'default') {
+      $thumbnail_url = $default_thumb;
+    } elseif ($thumb_mode === 'upload') {
+      if (!isset($_FILES['thumbnail']) || $_FILES['thumbnail']['error'] === UPLOAD_ERR_NO_FILE) {
+        if (!$current) {
+          $errors[] = '썸네일 파일을 선택해주세요.';
+        }
+      } else {
             $file = $_FILES['thumbnail'];
 
             if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -106,19 +139,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 기본 썸네일 유지 시 thumbnail_url은 기본값 사용
 
     if (empty($errors)) {
-        $now = date('Y-m-d H:i:s');
+      $now = date('Y-m-d H:i:s');
+
+      if ($editing_id > 0) {
+        $stmt = $pdo->prepare("UPDATE columns SET title = ?, is_notice = ?, thumbnail_mode = ?, thumbnail_url = ?, content = ?, updated_at = ? WHERE id = ?");
+        $stmt->execute([
+          $title,
+          $is_notice,
+          $thumb_mode,
+          $thumbnail_url,
+          $content,
+          $now,
+          $editing_id
+        ]);
+        header('Location: /column_view.php?id=' . urlencode((string)$editing_id));
+      } else {
         $stmt = $pdo->prepare("INSERT INTO columns (title, is_notice, thumbnail_mode, thumbnail_url, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NULL)");
         $stmt->execute([
-            $title,
-            $is_notice,
-            $thumb_mode,
-            $thumbnail_url,
-            $content,
-            $now
+          $title,
+          $is_notice,
+          $thumb_mode,
+          $thumbnail_url,
+          $content,
+          $now
         ]);
-
-        header('Location: /column.php');
-        exit;
+        $newId = (int)$pdo->lastInsertId();
+        header('Location: /column_view.php?id=' . urlencode((string)$newId));
+      }
+      exit;
     }
 }
 ?>
@@ -299,8 +347,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<section id="sub_column_wrap">
       <div class="inner">
         <div class="title">
-          <h2>칼럼 등록하기</h2>
-          <p>새로운 칼럼을 등록해주세요.</p>
+          <h2><?php echo $editing_id > 0 ? '칼럼 수정하기' : '칼럼 등록하기'; ?></h2>
+          <p><?php echo $editing_id > 0 ? '기존 칼럼을 수정합니다.' : '새로운 칼럼을 등록해주세요.'; ?></p>
         </div><!-- // title -->
 
         <div class="cv_wrap">
@@ -313,7 +361,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           <?php endif; ?>
 
-          <form method="post" enctype="multipart/form-data">
+          <form method="post" enctype="multipart/form-data" action="/column_write.php<?php echo $editing_id > 0 ? '?id=' . urlencode((string)$editing_id) : ''; ?>">
+          <?php if ($editing_id > 0): ?>
+            <input type="hidden" name="id" value="<?php echo $editing_id; ?>">
+          <?php endif; ?>
           <table class="tbl_cwr">
             <colgroup>
               <col width="20%">
@@ -336,6 +387,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <div style="margin-top:10px;">
                     <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/gif,image/bmp,image/webp,image/tiff">
                     <p class="r_txt">* 권장사이즈 : 600 x 420px</p>
+                    <?php if ($editing_id > 0 && $thumbnail_url): ?>
+                      <p class="r_txt">현재 썸네일: <?php echo h($thumbnail_url); ?></p>
+                    <?php endif; ?>
                   </div>
                 </td>
               </tr>
@@ -357,7 +411,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </tbody>
           </table><!-- // tbl_cwr -->
 
-          <button type="submit" class="col_list_btn col_cmpl_btn">등록</button>
+          <button type="submit" class="col_list_btn col_cmpl_btn"><?php echo $editing_id > 0 ? '수정' : '등록'; ?></button>
           </form>
         </div><!-- // cv_wrap -->
         

@@ -245,6 +245,16 @@ $next = $nextStmt->fetch(PDO::FETCH_ASSOC);
           <?php echo $column['content']; ?>
           </div><!-- // col_view_box -->
 
+          <?php if (is_logged_in() && is_admin()): ?>
+            <div style="margin:20px 0; display:flex; gap:10px;">
+              <a href="/column_write.php?id=<?php echo urlencode((string)$column['id']); ?>" class="col_list_btn">수정</a>
+              <form method="post" action="/column_delete.php" onsubmit="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
+                <input type="hidden" name="id" value="<?php echo $column['id']; ?>">
+                <button type="submit" class="col_list_btn">삭제</button>
+              </form>
+            </div>
+          <?php endif; ?>
+
           <div class="col_pn">
             <div class="prev">
               <?php if ($prev): ?>
