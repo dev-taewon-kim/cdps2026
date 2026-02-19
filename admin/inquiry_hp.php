@@ -144,6 +144,7 @@ $group_end = min($page_group * 10, $total_pages);
           <li><a href="#con" class="anchorLink">통증치료</a></li>
           <li><a href="#con" class="anchorLink">체형교정</a></li>
           <li><a href="#con" class="anchorLink">다이어트</a></li>
+          <li><a href="/column.php">전문칼럼</a></li>
           <li><a href="#con" class="anchorLink">입원치료</a></li>
           <li><a href="#con" class="anchorLink">오시는길</a></li>
         </ul><!-- // gnb -->
@@ -155,6 +156,7 @@ $group_end = min($page_group * 10, $total_pages);
               <h3><a href="#con" class="anchorLink">통증치료</a></h3>
               <h3><a href="#con" class="anchorLink">체형교정</a></h3>
               <h3><a href="#con" class="anchorLink">다이어트</a></h3>
+              <h3><a href="/column.php">전문칼럼</a></h3>
               <h3><a href="#con" class="anchorLink">입원치료</a></h3>
               <h3><a href="#con" class="anchorLink">오시는길</a></h3>
             </div><!-- // lnb -->

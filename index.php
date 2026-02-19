@@ -15,8 +15,8 @@
   <meta property="og:type" content="website"> 
 	<meta property="og:title" content="맑은숲구구팔한의원">
 	<meta property="og:description" content="맑은숲구구팔한의원">
-	<meta property="og:image" content="http://singilplant.com/images/og_img.png">
-	<meta property="og:url" content="http://singilplant.com/">
+	<meta property="og:image" content="http://malgeunsup998.com/images/og_img.jpg">
+	<meta property="og:url" content="http://malgeunsup998.com/">
 
 
   <link rel="stylesheet" href="./css/style.css" type="text/css"><!--  pc CSS -->
@@ -61,28 +61,236 @@
   <title>맑은숲구구팔한의원</title>
 </head>
 <body>
+  
+  <style>
+  
+      #hd_pop_1 {z-index:9999999;position:relative;margin:0 auto;width:100%;height:0;}
+      #hd_pop_2 {z-index:9999999;position:relative;margin:0 auto;width:100%;height:0;}
+      #hd_pop_3 {z-index:9999999;position:relative;margin:0 auto;width:100%;height:0;}
+  
+      #hd_pops_1{ top:10px;left:10px }
+      #hd_pops_1 .hd_pops_con { width:500px;height:620px;}
+      #hd_pops_1 img{ width:500px;height:620px;}
+      
+      #hd_pops_2{ top:10px;left:520px }
+      #hd_pops_2 .hd_pops_con { width:500px;height:620px;}
+      #hd_pops_2 img{ width:500px;height:620px;}
+      
+      #hd_pops_3{ top:10px;left:1030px }
+      #hd_pops_3 .hd_pops_con { width:500px;height:620px;}
+      #hd_pops_3 img{ width:500px;height:620px;}
+      
+      .hd_pops {position:absolute;background:transparent;}
+      .hd_pops img{z-index: 99999}
+      .hd_pops_con li{ display: block; float: left}
+      .hd_pops_footer {padding:10px 0;background:#000;color:#fff;text-align:right;}
+      .hd_pops_footer .button_1 {margin-right:5px;padding:5px 10px;border:0;background:#393939;color:#fff; width:250px;font-size: 15px; }
+      .hd_pops_footer .button_2 {margin-right:5px;padding:5px 10px;border:0;background:#393939;color:#fff; width:50px;font-size: 15px; }
+  
+      
+      @media screen and (max-width: 600px) {
+  
+          .hd_pops {position:absolute;background:transparent;}
+          .hd_pops_con li{ display: block; float: left}
+          .hd_pops_footer {padding:10px 0;background:#000;color:#fff;text-align:right}
+   
+          #hd_pops_1{ top:50px;left:50%;transform: translateX(-50%); }
+          #hd_pops_1 .hd_pops_con { width:350px;height:480px;}
+          #hd_pops_1 img{ width:350px;height:480px;}
+        
+          #hd_pops_2{ top:50px;left:50%;transform: translateX(-50%); }
+          #hd_pops_2 .hd_pops_con { width:350px;height:480px;}
+          #hd_pops_2 img{ width:350px;height:480px;}
+          
+          #hd_pops_3{ top:50px;left:50%;transform: translateX(-50%); }
+          #hd_pops_3 .hd_pops_con { width:350px;height:480px;}
+          #hd_pops_3 img{ width:350px;height:480px;}
+      }
+  
+  </style>
+  
+  <div id="hd_pop_1"  style="display: none">
+  
+      <div id="hd_pops_1" class="hd_pops">
+  
+          <div class="hd_pops_con" style="">
+  
+        <ul style="">
+  
+          <li style=""><a href="" target="_blank"><img src="img/pop_1.jpg"/></a></li>
+  
+        </ul>
+  
+          </div>
+  
+          <div class="hd_pops_footer">
+              <button onclick="close_24('1');" class="button_1"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
+              <button onclick="close_1('1');" class="button_2">닫기</a>
+          </div>
+  
+      </div>
+  
+  </div>
+  
+  <div id="hd_pop_2"  style="display: none">
+  
+      <div id="hd_pops_2" class="hd_pops">
+  
+          <div class="hd_pops_con" style="">
+  
+        <ul style="">
+  
+  <li style=""><a href="" target="_blank"><img src="img/pop_2.jpg"/></a></li>
+  
+        </ul>
+  
+          </div>
+  
+          <div class="hd_pops_footer">
+              <button onclick="close_24('2');" class="button_1"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
+              <button onclick="close_1('2');" class="button_2">닫기</a>
+          </div>
+  
+      </div>
+  
+  </div>
+  
+  <div id="hd_pop_3"  style="display: none">
+  
+      <div id="hd_pops_3" class="hd_pops">
+  
+          <div class="hd_pops_con" style="">
+  
+        <ul style="">
+  
+  <li style=""><a href="" target="_blank"><img src="img/pop_1.jpg"/></a></li>
+  
+        </ul>
+  
+          </div>
+  
+          <div class="hd_pops_footer">
+              <button onclick="close_24('3');" class="button_1"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
+              <button onclick="close_1('3');" class="button_2">닫기</a>
+          </div>
+  
+      </div>
+  
+  </div>
+  
+  
+  <script type="text/javascript">
+  
+    window.onload = function () {
+  
+      var result = getCookie('popup_1');
+  
+      if (result == 'end_1') {
+  
+  
+      }else{
+  
+       document.getElementById("hd_pop_1").style.display = '';
+        
+      }
+      
+      var result1 = getCookie('popup_2');
+      
+      if (result1 == 'end_2') {
+      
+      
+      }else{
+      
+        //document.getElementById("hd_pop_2").style.display = '';
+        
+      }
+      
+      var result2 = getCookie('popup_3');
+      
+      if (result2 == 'end_3') {
+      
+      
+      }else{
+      
+        //document.getElementById("hd_pop_3").style.display = '';
+        
+      }
+  
+    }
+  
+    function close_24(no){
+  
+      document.getElementById("hd_pop_"  + no).style.display = 'none';
+  
+      setCookie("popup_" + no, "end_" +  + no , 1);
+  
+    }
+    
+    function close_1(no){
+    
+      document.getElementById("hd_pop_"  + no).style.display = 'none';
+    
+    
+    }
+  
+  
+    function getCookie(name) {
+       var cookieName = name + "=";
+       var x = 0;
+       while ( x <= document.cookie.length ) {
+          var y = (x+cookieName.length);
+          if ( document.cookie.substring( x, y ) == cookieName) {
+             if ((lastChrCookie=document.cookie.indexOf(";", y)) == -1)
+                lastChrCookie = document.cookie.length;
+             return decodeURI(document.cookie.substring(y, lastChrCookie));
+          }
+          x = document.cookie.indexOf(" ", x ) + 1;
+          if ( x == 0 )
+             break;
+          }
+       return "";
+    }
+  
+    function setCookie(cname, value, expire) {
+       var todayValue = new Date();
+       // 오늘 날짜를 변수에 저장
+  
+       todayValue.setDate(todayValue.getDate() + expire);
+       document.cookie = cname + "=" + encodeURI(value) + "; expires=" + todayValue.toGMTString() + "; path=/;";
+  
+  
+    }
+  
+  
+  </script>
+  
 	<div id="wrap">
 		<header id="header">
       <div class="inner">
-        <h1><a href="/index.php"><img src="./images/logo.png" alt="맑은숲구구팔한의원"></a></h1>
+        <h1><a href="/index.php">
+          <img src="./images/logo.png" alt="맑은숲구구팔한의원" class="pc">
+          <img src="./images/logo_w.png" alt="맑은숲구구팔한의원" class="mob">
+        </a></h1>
         <ul class="gnb">
-          <li><a href="#con" class="anchorLink">의료진 소개</a></li>
-          <li><a href="#con" class="anchorLink">통증치료</a></li>
-          <li><a href="#con" class="anchorLink">체형교정</a></li>
-          <li><a href="#con" class="anchorLink">다이어트</a></li>
-          <li><a href="#con" class="anchorLink">입원치료</a></li>
-          <li><a href="#con" class="anchorLink">오시는길</a></li>
+          <li><a href="#con3" class="anchorLink">의료진 소개</a></li>
+          <li><a href="#con5" class="anchorLink">통증치료</a></li>
+          <li><a href="#con9" class="anchorLink">체형교정</a></li>
+          <li><a href="#con12" class="anchorLink">다이어트</a></li>
+          <li><a href="/column.php">전문칼럼</a></li>
+          <li><a href="#con18" class="anchorLink">입원치료</a></li>
+          <li><a href="#con22" class="anchorLink">오시는길</a></li>
         </ul><!-- // gnb -->
 
         <div class="navi clfix">
           <div class="navi_wrap">
             <div class="lnb">
-              <h3><a href="#con" class="anchorLink">의료진 소개</a></h3>
-              <h3><a href="#con" class="anchorLink">통증치료</a></h3>
-              <h3><a href="#con" class="anchorLink">체형교정</a></h3>
-              <h3><a href="#con" class="anchorLink">다이어트</a></h3>
-              <h3><a href="#con" class="anchorLink">입원치료</a></h3>
-              <h3><a href="#con" class="anchorLink">오시는길</a></h3>
+              <h3><a href="#con3" class="anchorLink">의료진 소개</a></h3>
+              <h3><a href="#con5" class="anchorLink">통증치료</a></h3>
+              <h3><a href="#con9" class="anchorLink">체형교정</a></h3>
+              <h3><a href="#con12" class="anchorLink">다이어트</a></h3>
+              <h3><a href="/column.php">전문칼럼</a></h3>
+              <h3><a href="#con18" class="anchorLink">입원치료</a></h3>
+              <h3><a href="#con22" class="anchorLink">오시는길</a></h3>
             </div><!-- // lnb -->
           </div><!-- // navi_wrap -->
         </div><!-- // navi -->
@@ -107,7 +315,7 @@
           <img src="./images/q_naver.png" alt="">
           <p>네이버 예약</p>
         </a></li>
-        <li><a href="" target="_blank">
+        <li><a href="https://pf.kakao.com/_xeJKIG" target="_blank">
           <img src="./images/q_kakao.png" alt="">
           <p>카카오톡 문의</p>
         </a></li>
@@ -168,12 +376,13 @@
 
 		<section id="main_visual">
 			<div class="video_wrap">
-        <video src="./images/main_video.mp4" autoplay muted loop width="100%" height="auto"></video>        
+        <video src="./images/main_video.mp4" autoplay muted loop playsinline webkit-playsinline width="100%" height="auto" class="pc"></video>
+        <video src="./images/main_video_mob.mp4" autoplay muted loop playsinline webkit-playsinline width="100%" height="auto" class="mob"></video>        
       </div><!-- // video_wrap -->
 		</section><!-- // main_visual -->
 
 
-    <section id="con1">
+    <section id="con1" data-aos="fade-up">
       <div class="inner">
         <img src="./images/con1_logo.png" alt="">
         <p><b class="org">맑은숲998한의원은</b> 믿음과 신뢰를 바탕으로 <b class="org">환자의 입장에서 진료하는 한의원</b>입니다.</p>
@@ -184,12 +393,12 @@
 
     <section id="con2">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-up">
           <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
           <h2>맑은숲구구팔한의원 <b>둘러보기</b></h2>
         </div><!-- // title -->
 
-        <ul class="c2_list" data-aos="fade-up" data-aos-delay="500">
+        <ul class="c2_list" data-aos="fade-up" data-aos-delay="300">
           <li>
             <img src="/images/con2_img01.jpg" alt="" class="pc">
             <img src="/images/con2_img01_mob.jpg" alt="" class="mob">
@@ -248,11 +457,11 @@
     <section id="con3">
 
       <div class="c3_doctor">
-        <div class="c3_top">
+        <div class="c3_top" data-aos="fade-left">
           <div class="tit inner">
             <img src="./images/tit_logo.png" alt="" class="tit_logo">
             <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
-            <h2 class="wave"><b>한 분 한 분의 몸을 이해</b>하고 <br><b>근본 원인</b>을 <b>바로잡는 진료</b>를 합니다.</h2>
+            <h2 class="wave"><b>한 분 한 분의 몸을 이해</b>하고 <br class="pc"><b>근본 원인</b>을 <b>바로잡는 진료</b>를 합니다.</h2>
             <div class="name pc">
               <h3 class="wave">윤 성 식</h3>
               <p>대표원장</p>
@@ -268,7 +477,7 @@
               <p>대표원장</p>
             </div><!-- // name -->
 
-            <div class="b_box">
+            <div class="b_box" data-aos="fade-up">
               <h4>학력</h4>
               <ul>
                 <li>· 대전대학교 한의과대학 졸업</li>
@@ -280,7 +489,7 @@
                 <li>· 現 맑은숲구구팔한의원 대표원장</li>
               </ul>
             </div><!-- // b_box -->
-            <div class="b_box">
+            <div class="b_box" data-aos="fade-up" data-aos-delay="200">
               <h4>학회활동</h4>
               <ul>
                 <li>· 대한한방내과학회 정회원</li>
@@ -289,7 +498,7 @@
                 <li>· 도침학회 정회원</li>
               </ul>
             </div><!-- // b_box -->
-            <div class="b_box">
+            <div class="b_box" data-aos="fade-up" data-aos-delay="400">
               <h4>논문</h4>
               <ul>
                 <li>· 소평탕이 RIN m-5F 세포에서 인슐린 분비 및 <br>유전자 발현에 미치는 영향</li>
@@ -302,11 +511,11 @@
       </div><!-- // c3_doctor -->
 
       <div class="c3_doctor">
-        <div class="c3_top">
+        <div class="c3_top" data-aos="fade-right">
           <div class="tit inner">
             <img src="./images/tit_logo.png" alt="" class="tit_logo">
             <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
-            <h2 class="wave"><b>체질</b>과 <b>몸 상태</b>를 <b>세심히 살펴 <br>개인에 맞는 진료</b>를 합니다.</h2>
+            <h2 class="wave"><b>체질</b>과 <b>몸 상태</b>를 <br class="mob"> <b>세심히 살펴 <br>개인에 맞는 진료</b>를 합니다.</h2>
             <div class="name pc">
               <h3 class="wave">김 민 호</h3>
               <p>원장</p>
@@ -322,7 +531,7 @@
               <p>원장</p>
             </div><!-- // name -->
 
-            <div class="b_box">
+            <div class="b_box" data-aos="fade-up">
               <h4>학력</h4>
               <ul>
                 <li>· 우석대학교 한의학과 졸업</li>
@@ -333,7 +542,7 @@
                 <li>· 現 부산 맑은숲구구팔한의원 원장</li>
               </ul>
             </div><!-- // b_box -->
-            <div class="b_box">
+            <div class="b_box" data-aos="fade-up" data-aos-delay="200">
               <h4>학회활동</h4>
               <ul>
                 <li>· 척추신경추나의학회 정회원</li>
@@ -342,7 +551,7 @@
                 <li>· 대한한의도침학회 정회원</li>
               </ul>
             </div><!-- // b_box -->
-            <div class="b_box">
+            <div class="b_box" data-aos="fade-up" data-aos-delay="400">
               <h4>특화진료분야</h4>
               <ul>
                 <li>· 근육기능검사 기반 체형 교정 및 재활 추나</li>
@@ -361,14 +570,14 @@
 
     <section id="con4">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-up">
           <img src="./images/tit_logo.png" alt="" class="tit_logo">
           <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
           <h2>맑은숲구구팔한의원, <br><b>통증부터 체형까지</b> 완전한 건강 회복 시스템</h2>
           <p>믿을 수 있는 진료 철학과 체계적인 접근으로, 고객의 건강을 최우선으로 생각합니다.</p>
         </div><!-- // title -->
 
-        <div class="c4_box pc">
+        <div class="c4_box pc" data-aos="fade-up" data-aos-delay="300">
           <ul class="c4_list">
             <li>
               <img src="/images/con4_img01_1.png" alt="" class="off">
@@ -389,7 +598,7 @@
           </ul>
         </div><!-- // c4_box -->
 
-        <div class="c4_box_mob mob">
+        <div class="c4_box_mob mob" data-aos="fade-up" data-aos-delay="300">
           <ul class="c4_list_mob">
             <li><img src="./images/con4_img01_mob.png" alt=""></li>
             <li><img src="./images/con4_img02_mob.png" alt=""></li>
@@ -456,11 +665,19 @@
         <div class="title" data-aos="fade-up">
           <img src="./images/tit_logo.png" alt="" class="tit_logo">
           <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
-          <h2><b>맑은숲구구팔</b> 통증치료 방법</h2>
+          <h2><b>맑은숲구구팔</b><br class="mob"> 통증치료 방법</h2>
           <p>통증은 근육·인대·관절 등 여러 요소가함께 작용하기 때문에 정확한 진단과 체계적인 치료가 중요합니다.<br>맑은숲구구팔한의원은 원인을 찾고, 재발까지 고려한 통합 치료를 제공합니다.</p>
+
+          <div class="mob">
+            <div class="c6_pg">
+              <div class="c6_prev"><img src="./images/prev_btn.png" alt=""></div>
+              <div class="c6_next"><img src="./images/next_btn.png" alt=""></div>
+            </div>
+          </div>
+          
         </div><!-- // title -->
 
-        <ul class="c6_list six_list">
+        <ul class="c6_list six_list" data-aos="fade-up" data-aos-delay="300">
           <li>
             <img src="./images/con6_img01.jpg" alt="">
             <div class="txt">
@@ -529,27 +746,27 @@
 
     <section id="con7" class="bimg_con">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-left">
           <h2><b>통증치료</b> 특징</h2>
           <p>통증은 단순 억제가 아니라 원인을 바로잡아야 재발을 막을 수 있습니다. <br>맑은숲구구팔한의원은 다음과 같은 접근으로 더 빠르고 정확한 회복을 돕습니다.</p>
         </div><!-- // title -->
 
-        <div class="bimg_box">
+        <div class="bimg_box" data-aos="fade-up" data-aos-delay="200">
           <img src="./images/con7_img.jpg" alt="" class="pc">
           <img src="./images/con7_img_mob.jpg" alt="" class="mob">
 
           <ul class="bi_list">
-            <li>
+            <li data-aos="fade-up" data-aos-delay="400">
               <span>01</span>
               <p>근육·인대·신경의 원인 중심 치료</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="600">
               <span>02</span>
-              <p>급성 통증 환자 대상 입원 집중 프로그램 운영</p>
+              <p>급성 통증 환자 대상 입원 <br class="mob"> 집중 프로그램 운영</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="800">
               <span>03</span>
-              <p>단순 통증 완화 → 구조적 회복까지 단계별 접근</p>
+              <p>단순 통증 완화 → 구조적 회복까지<br class="mob"> 단계별 접근</p>
             </li>
           </ul>
         </div><!-- // bimg_box -->
@@ -608,9 +825,16 @@
           <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
           <h2><b>맑은숲구구팔</b> 체형교정치료 방법</h2>
           <p>체형은 골반·척추·근육 등 여러 구조가 함께 작용하기 때문에 정확한 평가와 단계적인 교정이 중요합니다. <br>맑은숲구구팔한의원은 불균형의 원인을 찾고, 교정부터 재활까지 고려한 체형 통합 치료를 제공합니다.</p>
+
+          <div class="mob">
+            <div class="c9_pg">
+              <div class="c9_prev"><img src="./images/prev_btn.png" alt=""></div>
+              <div class="c9_next"><img src="./images/next_btn.png" alt=""></div>
+            </div>
+          </div>
         </div><!-- // title -->
 
-        <ul class="c9_list six_list">
+        <ul class="c9_list six_list" data-aos="fade-up" data-aos-delay="300">
           <li>
             <img src="./images/con9_img01.jpg" alt="">
             <div class="txt">
@@ -675,31 +899,31 @@
             치료 및 회복 과정을 객관적인 지표로 체계적으로 관리할 수 있습니다.</p>
         </div><!-- // title -->
       </div><!-- // inner -->
-      <img src="./images/con10_img.png" alt="">
+      <img src="./images/con10_img.png" alt="" data-aos="fade-right" data-aos-delay="300">
     </section><!-- // con10 -->
 
 
     <section id="con11" class="bimg_con">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-left">
           <h2><b>체형교정</b> 특징</h2>
           <p>체형은 단순 교정만으로는 유지되기 어렵기 때문에 정확한 분석과 단계적인 접근이 중요합니다. <br>맑은숲구구팔한의원은 아래와 같은 방식으로 효과를 높입니다.</p>
         </div><!-- // title -->
 
-        <div class="bimg_box">
+        <div class="bimg_box" data-aos="fade-up" data-aos-delay="200">
           <img src="./images/con11_img.jpg" alt="" class="pc">
           <img src="./images/con11_img_mob.jpg" alt="" class="mob">
 
           <ul class="bi_list">
-            <li>
+            <li data-aos="fade-up" data-aos-delay="400">
               <span>01</span>
               <p>체형분석 + 근육밸런스 기반 정밀 교정</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="600">
               <span>02</span>
               <p>통증 완화 → 교정 → 재활까지 단계별 프로그램 구성</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="800">
               <span>03</span>
               <p>집중 회복이 필요한 분들을 위한 입원 프로그램 운영</p>
             </li>
@@ -720,19 +944,19 @@
         </div><!-- // title -->
 
         <ul class="check_list">
-          <li>
+          <li data-aos="fade-left" data-aos-delay="200">
             <img src="./images/con12_check.png" alt="">
             <p>1:1 맞춤 진료 및 주간·월간 관리 시스템</p>
           </li>
-          <li>
+          <li data-aos="fade-left" data-aos-delay="400">
             <img src="./images/con12_check.png" alt="">
             <p>초기 집중관리 → 감량기 → 유지기 단계별 관리</p>
           </li>
-          <li>
+          <li data-aos="fade-left" data-aos-delay="600">
             <img src="./images/con12_check.png" alt="">
             <p>식단, 생활습관, 수면, 스트레스 케어 병행</p>
           </li>
-          <li>
+          <li data-aos="fade-left" data-aos-delay="800">
             <img src="./images/con12_check.png" alt="">
             <p>필요 시 체성분 분석, 혈액순환 상태 측정 등 진단 활용</p>
           </li>
@@ -750,17 +974,17 @@
         </div><!-- // title -->
 
         <ul class="c13_list">
-          <li>
+          <li data-aos="fade-up" data-aos-delay="300" data-img="./images/con13_icon01.png" data-hover="./images/con13_icon01_2.png">
             <img src="./images/con13_icon01.png" alt="">
             <h3>체질별 한약처방</h3>
             <p>체질·대사 상태를 분석해 <br>목적에 맞는 한약을 처방하여 <br>지방 연소·식욕 조절·부종 개선을 돕습니다.</p>
           </li>
-          <li>
+          <li data-aos="fade-up" data-aos-delay="600" data-img="./images/con13_icon02.png" data-hover="./images/con13_icon02_2.png">
             <img src="./images/con13_icon02.png" alt="">
             <h3>비만약침</h3>
             <p>지방층을 직접 자극해 순환을 개선하고 <br>복부·옆구리 중심으로 집중 감량을 유도합니다. <br>(복부, 옆구리 등 지방층 타깃)</p>
           </li>
-          <li>
+          <li data-aos="fade-up" data-aos-delay="900" data-img="./images/con13_icon03.png" data-hover="./images/con13_icon03_2.png">
             <img src="./images/con13_icon03.png" alt="">
             <h3>주간·월간 맞춤 관리 프로그램</h3>
             <p>감량 단계에 맞춘 1:1 관리로 <br>식습관·생활패턴까지 <br>조절해 요요를 예방합니다.</p>
@@ -774,13 +998,13 @@
       <div class="inner">
         <div class="title" data-aos="fade-up">
           <span class="org">MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
-          <h2><b>나에게 맞는 다이어트 약</b>을 <br>찾아야, 감량이 오래갑니다!</h2>
+          <h2><b>나에게 맞는 <br class="mob">다이어트 약</b>을 <br class="pc">찾아야,<br class="mob"> 감량이 오래갑니다!</h2>
           <p>체질 분석부터 처방, 복용 방식, 생활 습관 개선, 부작용 관리까지 <br>근거 있는 한약 다이어트 시스템을 소개합니다.</p>
 
-          <button class="go_cs"><a href="">상담 바로가기</a></button>
+          <button class="go_cs"><a href="tel:051-752-9981">상담 바로가기</a></button>
         </div><!-- // title -->
 
-        <ul class="c14_list">
+        <ul class="c14_list" data-aos="fade-up" data-aos-delay="400">
           <li>
             <div class="top">
               <h3>01. 체질 분석 및 상태 진단</h3>
@@ -824,25 +1048,25 @@
 
     <section id="con15" class="bimg_con">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-left">
           <h2><b>998 한방다이어트</b> 특징</h2>
           <p>참는 다이어트가 아닌, 내 몸에 맞춘 회복 중심의 다이어트 <br>체질과 건강을 바탕으로, 무리 없이 지속 가능한 감량을 이끌어냅니다.</p>
         </div><!-- // title -->
 
-        <div class="bimg_box">
+        <div class="bimg_box" data-aos="fade-up" data-aos-delay="200">
           <img src="./images/con15_img.jpg" alt="" class="pc">
           <img src="./images/con15_img_mob.jpg" alt="" class="mob">
 
           <ul class="bi_list">
-            <li>
+            <li data-aos="fade-up" data-aos-delay="400">
               <span>01</span>
               <p>체중이 아닌 체질 중심의 다이어트 접근</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="600">
               <span>02</span>
               <p>기혈·소화·호르몬 밸런스 조절로 건강한 감량</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="800">
               <span>03</span>
               <p>지방 축적 원인을 바로잡아 재발 방지</p>
             </li>
@@ -855,11 +1079,11 @@
 
     <section id="con16">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-up">
           <h2><b>998 한방다이어트</b> 변화의 기록</h2>
         </div><!-- // title -->
 
-        <ul class="c16_list">
+        <ul class="c16_list" data-aos="fade-up" data-aos-delay="300">
           <li>
             <img src="./images/con16_img01.png" alt="" class="pc">
             <img src="./images/con16_img01_mob.png" alt="" class="mob">
@@ -882,16 +1106,16 @@
           </li>
         </ul><!-- // c16_list -->
 
-        <p>* 실제 998다이어트 진행된 고객님의 인바디 측정 결과입니다.</p>
+        <p data-aos="fade-up" data-aos-delay="500">* 실제 998다이어트 진행된 <br class="mob"> 고객님의 인바디 측정 결과입니다.</p>
       </div><!-- // inner -->
     </section><!-- // con16 -->
 
 
     <section id="con17" class="inq_section">
-      <div class="inner">
+      <div class="inner" data-aos="fade-up">
         <div class="title">
-          <h2><b>다이어트</b> 혼자 고민하지 마세요!</h2>
-          <p>맑은숲998한의원에서 체질에 맞춘 다이어트 상담을 도와드립니다.</p>
+          <h2><b>다이어트</b> 혼자 <br class="mob">고민하지 마세요!</h2>
+          <p>맑은숲998한의원에서 <br class="mob">체질에 맞춘 다이어트 상담을 도와드립니다.</p>
         </div><!-- // title -->
 
         <form method="post" action="/admin/submit_inquiry_diet.php">
@@ -923,7 +1147,7 @@
 
             <div class="btn_wrap">
               <ul>
-                <li><a href="https://buly.kr/AwgWNdj" target="_blank"><img src="./images/con17_kakao.png" alt=""></a></li>
+                <li><a href="https://pf.kakao.com/_xeJKIG" target="_blank"><img src="./images/con17_kakao.png" alt=""></a></li>
                 <li><a href="tel:051-752-9981"><img src="./images/con17_tel.png" alt=""></a></li>
               </ul>
               <button type="submit" class="in_btn">상담신청</button>
@@ -935,34 +1159,112 @@
     </section><!-- // con17 -->
 
 
+    <section id="column_con">
+      <div class="inner">
+        <div class="title" data-aos="fade-up">
+          <h2><b>998전문</b> 칼럼</h2>
+          <p>맑은숲구구팔에서 전하는 한의학 기반 <br class="mob"> 건강 정보와 전문 칼럼을 확인하실 수 있습니다.</p>
+          <button class="col_btn"><a href="/column.php">더보기 ></a></button>
+        </div><!-- // title -->
+
+        <div class="main_col_wrap" data-aos="fade-up" data-aos-delay="300">
+          <!-- main_col_list은 column 페이지에 있는 최신글 6개만 노출(공지 있으면 공지 우선 노출, 공지 포함 6개) -->
+          <ul class="main_col_list">
+            <li><a href="/column.php">
+              <div class="img_wrap">
+                <img src="./images/col_img.jpg" alt="">
+              </div><!-- // img_wrap -->
+              <div class="txt_wrap">
+                <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                <p>내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 </p>
+              </div><!-- // txt_wrap -->
+            </a></li>
+            <li><a href="/column.php">
+              <div class="img_wrap">
+                <img src="./images/col_img.jpg" alt="">
+              </div><!-- // img_wrap -->
+              <div class="txt_wrap">
+                <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                <p>내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 </p>
+              </div><!-- // txt_wrap -->
+            </a></li>
+            <li><a href="/column.php">
+              <div class="img_wrap">
+                <img src="./images/col_img.jpg" alt="">
+              </div><!-- // img_wrap -->
+              <div class="txt_wrap">
+                <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                <p>내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 </p>
+              </div><!-- // txt_wrap -->
+            </a></li>
+            <li><a href="/column.php">
+              <div class="img_wrap">
+                <img src="./images/col_img.jpg" alt="">
+              </div><!-- // img_wrap -->
+              <div class="txt_wrap">
+                <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                <p>내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 </p>
+              </div><!-- // txt_wrap -->
+            </a></li>
+            <li><a href="/column.php">
+              <div class="img_wrap">
+                <img src="./images/col_img.jpg" alt="">
+              </div><!-- // img_wrap -->
+              <div class="txt_wrap">
+                <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                <p>내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 </p>
+              </div><!-- // txt_wrap -->
+            </a></li>
+            <li><a href="/column.php">
+              <div class="img_wrap">
+                <img src="./images/col_img.jpg" alt="">
+              </div><!-- // img_wrap -->
+              <div class="txt_wrap">
+                <h4>제목입니다 제목입니다 제목입니다 제목입니다 제목입니다</h4>
+                <p>내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 내용 영역입니다 </p>
+              </div><!-- // txt_wrap -->
+            </a></li>
+          </ul><!-- // main_col_list -->
+
+          <div class="c_btns">
+            <button class="c_prev"><img src="./images/c_prev.png" alt=""></button>
+            <button class="c_next"><img src="./images/c_next.png" alt=""></button>
+          </div><!-- // c_btns -->
+        </div><!-- // main_col_wrap -->
+        
+
+      </div><!-- // inner -->
+    </section><!-- // column_con -->
+
+
     <section id="con18" class="bimg_con">
       <div class="inner">
-        <div class="title">
+        <div class="title" data-aos="fade-left">
           <h2><b>맑은숲구구팔한의원,</b><br> 입원치료 시스템</h2>
           <p>정확한 진단과 집중 치료가 필요한 경우, 입원치료는 최선의 선택입니다. <br>맑은숲구구팔한의원은 단계별 분석과 통합적 접근을 통해 짧은 시간 내 효과적인 회복을 유도합니다.</p>
         </div><!-- // title -->
 
-        <div class="bimg_box">
+        <div class="bimg_box" data-aos="fade-up" data-aos-delay="200">
           <img src="./images/con18_img.jpg" alt="" class="pc">
           <img src="./images/con18_img_mob.jpg" alt="" class="mob">
 
           <ul class="bi_list">
-            <li>
+            <li data-aos="fade-up" data-aos-delay="400">
               <span>01</span>
               <h3>정확한 진단</h3>
               <p>초음파·체형분석 기반의 원인 진단</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="600">
               <span>02</span>
               <h3>통합치료</h3>
               <p>침·약침·도침·추나·한약의 유기적 조합</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="800">
               <span>03</span>
               <h3>맞춤관리</h3>
               <p>체질 및 생활습관 분석을 통한 개인별 케어</p>
             </li>
-            <li>
+            <li data-aos="fade-up" data-aos-delay="1000">
               <span>04</span>
               <h3>입원집중치료</h3>
               <p>단기간 내 구조 회복 및 재활 프로그램</p>
@@ -981,9 +1283,17 @@
           <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
           <h2>맑은숲구구팔 <b>입원치료</b></h2>
           <p>통증·질환·재활·교통사고 환자를 위한 집중 회복 시스템을 제공합니다. 안정된 환경의 전용 입원실에서 더 집중적이고 <br>체계적인 치료가 가능하며, 통증 완화부터 기능 회복까지 한의학 기반의 전문 케어를 받으실 수 있습니다.</p>
+
+          <div class="mob">
+            <div class="c19_pg">
+              <div class="c19_prev"><img src="./images/prev_btn.png" alt=""></div>
+              <div class="c19_next"><img src="./images/next_btn.png" alt=""></div>
+            </div>
+          </div>
+
         </div><!-- // title -->
 
-        <ul class="c19_list six_list">
+        <ul class="c19_list six_list" data-aos="fade-up" data-aos-delay="300">
           <li>
             <img src="./images/con19_img01.jpg" alt="">
             <div class="txt">
@@ -1039,7 +1349,7 @@
 
 
     <section id="con20" class="inq_section">
-      <div class="inner">
+      <div class="inner"data-aos="fade-up">
         <div class="title">
           <h2><b>몸</b> 상태가 많이 힘드신가요?</h2>
           <p>맑은숲998한의원에서 입원치료 상담을 도와드립니다.</p>
@@ -1073,7 +1383,7 @@
 
             <div class="btn_wrap">
               <ul>
-                <li><a href="https://buly.kr/AwgWNdj" target="_blank"><img src="./images/con17_kakao.png" alt=""></a></li>
+                <li><a href="https://pf.kakao.com/_xeJKIG" target="_blank"><img src="./images/con17_kakao.png" alt=""></a></li>
                 <li><a href="tel:051-752-9981"><img src="./images/con17_tel.png" alt=""></a></li>
               </ul>
               <button type="submit" class="in_btn">상담신청</button>
@@ -1090,10 +1400,10 @@
         <div class="title" data-aos="fade-up">
           <img src="./images/tit_logo.png" alt="" class="tit_logo">
           <span>MALGEUNSUP 998 KOREAN MEDICAL CLINIC</span>
-          <h2>한 분 한 분을 소중히 진료하는 <br><b>맑은숲구구팔한의원</b></h2>
+          <h2>한 분 한 분을 <br class="mob"> 소중히 진료하는 <br><b>맑은숲구구팔한의원</b></h2>
         </div><!-- // title -->
 
-        <div class="c21_box pc">
+        <div class="c21_box">
           <ul class="review_01">
             <li><img src="./images/review_01.png" alt=""></li>
             <li><img src="./images/review_02.png" alt=""></li>
@@ -1118,6 +1428,21 @@
             <li><img src="./images/review_09.png" alt=""></li>
             <li><img src="./images/review_10.png" alt=""></li>
           </ul>
+          <div class="mob">
+            <ul class="review_03">
+              <li><img src="./images/review_06.png" alt=""></li>
+              <li><img src="./images/review_07.png" alt=""></li>
+              <li><img src="./images/review_08.png" alt=""></li>
+              <li><img src="./images/review_09.png" alt=""></li>
+              <li><img src="./images/review_10.png" alt=""></li>
+              <li><img src="./images/review_06.png" alt=""></li>
+              <li><img src="./images/review_07.png" alt=""></li>
+              <li><img src="./images/review_08.png" alt=""></li>
+              <li><img src="./images/review_09.png" alt=""></li>
+              <li><img src="./images/review_10.png" alt=""></li>
+            </ul>
+          </div>
+          
         </div><!-- // c21_box -->
 
       </div><!-- // inner -->
@@ -1188,11 +1513,11 @@
                 <ul>
                   <li>
                     <span>제1주차장</span>
-                    <p>수영우체국 (수영구 수영로 725번길 33)</p>
+                    <p>수영우체국<br class="mob"> (수영구 수영로 725번길 33)</p>
                   </li>
                   <li>
                     <span>제2주차장</span>
-                    <p>수영팔도시장공영주차장 (수영구 수영성로13번길 18)</p>
+                    <p>수영팔도시장공영주차장<br class="mob"> (수영구 수영성로13번길 18)</p>
                   </li>
                 </ul>
               </div>
@@ -1249,11 +1574,106 @@
               <li>Copylightⓒ2025 맑은숲구구팔한의원 All Rights Reserved.</li>
             </ul>
           </div><!-- // f_box -->
-          <button>비급여 항목안내</button>
+          <button class="nonpay_btn">비급여 항목안내</button>
         </div><!-- // f_wrap -->
 
       </div><!-- // inner -->
     </footer><!-- // footer -->
+
+
+    <!-- 팝업 시작 -->
+    <div id="mainPopup" class="popup_overlay" aria-hidden="true" style="display:none;">
+      <div class="popup_wrap" role="dialog" aria-modal="true" aria-label="이벤트 팝업">
+        <div class="popup_content">
+          <div class="pop_inner">
+            <ul class="pop_list">
+              <li><img src="./images/popup_img_01.jpg" alt=""></li>
+              <li><img src="./images/popup_img_02.jpg" alt=""></li>
+              <!-- <li><img src="./images/popup_img_03.jpg" alt=""></li>
+              <li><img src="./images/popup_img_04.jpg" alt=""></li> -->
+            </ul><!-- // pop_list -->
+          </div><!-- // pop_inner -->
+
+          <div class="popup_footer">
+            <label class="today_close">
+              <input type="checkbox" id="popupTodayClose" />
+              <span>오늘 하루 열지 않음</span>
+            </label>
+
+            <button type="button" class="close_btn" aria-label="팝업 닫기">닫기</button>
+          </div><!-- // popup_footer -->
+        </div><!-- // popup_content -->
+      </div><!-- // popup_wrap -->
+    </div><!-- // mainPopup -->
+
+
+    <script>
+      (function () {
+        const popup = document.getElementById("mainPopup");
+        const closeBtn = popup.querySelector(".close_btn");
+        const todayChk = document.getElementById("popupTodayClose");
+        const openBtns = document.querySelectorAll(".nonpay_btn");
+
+        const COOKIE_NAME = "popup_hide_until_midnight";
+
+        /* === 쿠키 유틸 === */
+        function setCookieUntilMidnight(name, value) {
+          const now = new Date();
+          const midnight = new Date();
+          midnight.setHours(24, 0, 0, 0);
+
+          document.cookie =
+            name + "=" + value +
+            "; expires=" + midnight.toUTCString() +
+            "; path=/";
+        }
+
+        function getCookie(name) {
+          return document.cookie
+            .split("; ")
+            .find(row => row.startsWith(name + "="))
+            ?.split("=")[1];
+        }
+
+        /* === 팝업 열기 === */
+        function openPopup() {
+          popup.style.display = "block";
+          popup.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+
+        /* === 팝업 닫기 === */
+        function closePopup() {
+          popup.style.display = "none";
+          popup.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+        }
+
+        /* === 오늘 하루 체크 === */
+        closeBtn.addEventListener("click", () => {
+          if (todayChk.checked) {
+            setCookieUntilMidnight(COOKIE_NAME, "hide");
+          }
+          closePopup();
+        });
+
+        /* === 버튼 클릭으로 열기 === */
+        openBtns.forEach(btn => {
+          btn.addEventListener("click", e => {
+            e.preventDefault();
+            openPopup();
+          });
+        });
+
+        /* === 초기 상태 (쿠키 확인) === */
+        if (getCookie(COOKIE_NAME) === "hide") {
+          popup.style.display = "none";
+        }
+      })();
+    </script>
+
+
+    <!-- 팝업 끝 -->
 
 
 
@@ -1267,6 +1687,25 @@
     duration: 1000,
     once : 1 ,
     offset: 300
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.c13_list li').forEach(li => {
+      const img = li.querySelector('img');
+      const originSrc = li.dataset.img;
+      const hoverSrc = li.dataset.hover;
+
+      if (!img || !originSrc || !hoverSrc) return;
+
+      li.addEventListener('mouseenter', () => {
+        img.src = hoverSrc;
+      });
+
+      li.addEventListener('mouseleave', () => {
+        img.src = originSrc;
+      });
+    });
   });
 
 
@@ -1399,55 +1838,7 @@
       }
     });
 
-/*
-    var swiper = new Swiper(".c2_wrap", {
-      slidesPerView: 3,
-      spaceBetween: 24,
-      pagination: false,
-      navigation: {
-        nextEl: '.c2_next',
-        prevEl: '.c2_prev',
-      },
 
-      breakpoints: {
-        768: {
-          slidesPerView: 1,
-        }
-      }
-    });
-
-    var swiper = new Swiper(".c8_wrap", {
-      slidesPerView: 1,
-      spaceBetween: 10,
-      pagination: false,
-      navigation: {
-        nextEl: '.c8_next',
-        prevEl: '.c8_prev',
-      }
-    });
-
-    var swiper = new Swiper(".c12_wrap", {
-      slidesPerView: 1,
-      spaceBetween: 10,
-      pagination: false,
-      navigation: {
-        nextEl: '.c12_next',
-        prevEl: '.c12_prev',
-      }
-    });
-
-    var swiper = new Swiper(".c13_wrap", {
-      slidesPerView: 1,
-      spaceBetween: 40,
-      centeredSlides: true,
-      pagination: false,
-      loop: true,
-      autoplay: {
-        delay: 3000,
-      }
-    });
-*/
-    
 
     // 슬릭
 
@@ -1476,20 +1867,84 @@
     });
 
 
+    $('.main_col_list').slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 3000,
+      dots : false,
+      nextArrow:$('.c_next'),
+      prevArrow:$('.c_prev'),
+      responsive: [
+        {
+          breakpoint: 767,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
 
 
 
     function applyStyles() {
       if ($(window).width() <= 767) {
         
-        // $('.c11_list').slick({
-        //   slidesToShow: 1,
-        //   slidesToScroll: 1,
-        //   autoplay: true,
-        //   autoplaySpeed: 3000,
-        //   arrows : false,
-        //   dots : false, 
-        // });
+        $('.c4_list_mob').slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          arrows : false,
+          dots : false, 
+        });
+
+
+        $('.c6_list').slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          nextArrow:$('.c6_next'),
+          prevArrow:$('.c6_prev'),
+          dots : false, 
+        });
+
+
+        $('.c9_list').slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          nextArrow:$('.c9_next'),
+          prevArrow:$('.c9_prev'),
+          dots : false, 
+        });
+
+
+        $('.c13_list').slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          arrows : false,
+          dots : false, 
+        });
+
+
+        $('.c19_list').slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 3000,
+          nextArrow:$('.c19_next'),
+          prevArrow:$('.c19_prev'),
+          dots : false, 
+        });
+
+
+        
 
         $('.q_plus').click(function() {
           $('.q_list').slideToggle();
